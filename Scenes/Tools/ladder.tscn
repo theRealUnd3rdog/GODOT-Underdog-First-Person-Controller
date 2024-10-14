@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://crao2b8jqk2p1"]
+
+[ext_resource type="PackedScene" uid="uid://de0m4efhg3n52" path="res://Scenes/Tools/csg_ref.tscn" id="1_iupdu"]
+[ext_resource type="Script" path="res://Scripts/Tools/Ladder.cs" id="1_wok5e"]
+[ext_resource type="Material" uid="uid://bc7occvsj6vfg" path="res://Materials/PrototypeBlack.tres" id="2_x6qko"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qc8hr"]
+size = Vector3(1.22596, 10.6905, 1)
+
+[node name="Ladder" type="Node3D"]
+script = ExtResource("1_wok5e")
+
+[node name="LadderArea" type="Area3D" parent="." groups=["Ladder"]]
+collision_layer = 16
+
+[node name="LadderCollider" type="CollisionShape3D" parent="LadderArea" groups=["Ladder"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0752484, 4.36334, 0)
+shape = SubResource("BoxShape3D_qc8hr")
+
+[node name="L_Pillar" parent="." instance=ExtResource("1_iupdu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14225, 4.36334, 0)
+material_override = ExtResource("2_x6qko")
+size = Vector3(0.098, 9.727, 0.269)
+ShowXLabel = false
+ShowZLabel = false
+RefFontSize = 25
+MeasurementFontSize = 185
+
+[node name="R_Pillar" parent="." instance=ExtResource("1_iupdu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.991752, 4.36334, 0)
+material_override = ExtResource("2_x6qko")
+size = Vector3(0.098, 9.727, 0.269)
+ShowXLabel = false
+ShowYLabel = false
+ShowZLabel = false
+MeasurementFontSize = 65

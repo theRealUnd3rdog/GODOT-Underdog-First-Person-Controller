@@ -81,6 +81,11 @@ public partial class PlayerSlide : PlayerMovementState
             EmitSignal(SignalName.StateFinished, "PlayerVault", new());
         }
 
+        if (Movement.CheckLadder())
+        {
+            EmitSignal(SignalName.StateFinished, "PlayerLadder", new());
+        }
+
         SlideCurrentChange?.Invoke(Movement.slideTimer);
     }
 }

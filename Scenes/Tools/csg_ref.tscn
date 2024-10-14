@@ -13,8 +13,8 @@ material_override = ExtResource("1_pwwhq")
 use_collision = true
 collision_layer = 2
 script = ExtResource("2_dc28v")
-_refFontSize = 125
-_measurementFontSize = 45
+RefFontSize = 125
+MeasurementFontSize = 45
 
 [node name="Remote" type="RemoteTransform3D" parent="."]
 remote_path = NodePath("../RefControl")

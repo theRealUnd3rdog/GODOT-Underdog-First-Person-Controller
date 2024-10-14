@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://csnwe5el5iwgq"]
+
+[ext_resource type="Material" uid="uid://bc7occvsj6vfg" path="res://Materials/PrototypeBlack.tres" id="1_jgwfg"]
+
+[node name="CSGCylinder3D" type="CSGCylinder3D"]
+transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
+material_override = ExtResource("1_jgwfg")
+use_collision = true
+radius = 0.086
+height = 1.47482

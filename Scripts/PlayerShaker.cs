@@ -76,6 +76,10 @@ public partial class PlayerShaker : Node
                 ChangeShakeInfluence(CamShake.ShakePreset(new CamShakeInstance(0.2f, 0.5f, 25f, 0.5f, 0.5f)));
                 break;
 
+            case PlayerLadder:
+                ChangeShakeInfluence(_idleShake);
+                break;
+
             default:
                 ChangeShakeInfluence(_idleShake);
                 break;

@@ -11,6 +11,7 @@ public enum CameraState
 	Normal,
 	Freelooking,
 	Wallrunning,
+	Ladder,
 }
 
 public partial class PlayerMovement : CharacterBody3D
@@ -101,6 +102,11 @@ public partial class PlayerMovement : CharacterBody3D
 
 	[ExportSubgroup("Vertical wallrun")]
 	[Export] public float verticalRunHeight {private set; get;} = 4f; // in metres
+
+	[ExportSubgroup("Ladder")]
+	[Export] public float ladderSpeed;
+	public bool isLadder;
+	public Ladder currentLadder;
 
 	[ExportSubgroup("Head Bobbing")]
 	[Export] private float _headBobSprintSpeed = 22.0f;
@@ -274,6 +280,21 @@ public partial class PlayerMovement : CharacterBody3D
 		_neck.Rotation = neckRotation;
 	}
 
+	public void ConstraintedRotation(float mouseX, float mouseY, float leftDeg, float rightDeg, float upDeg, float downDeg)
+	{
+		_neck.RotateY(Mathf.DegToRad(-mouseX * mouseSensitivityX));
+
+		float neckClampedRotationY = Mathf.Clamp(_neck.Rotation.Y, Mathf.DegToRad(leftDeg), Mathf.DegToRad(rightDeg));
+		Vector3 neckRotation = new Vector3(_neck.Rotation.X, neckClampedRotationY, _neck.Rotation.Z);
+		_neck.Rotation = neckRotation;
+
+		_rotationX += Mathf.DegToRad(-mouseY * mouseSensitivityY);
+		_rotationX = Mathf.Clamp(_rotationX, Mathf.DegToRad(downDeg), Mathf.DegToRad(upDeg));
+
+		Vector3 eyeRot = new Vector3(_eyes.Rotation.X, _eyes.Rotation.Y, 0f);
+		_eyes.Rotation = _eyes.Rotation.Lerp(eyeRot, 1.0f - Mathf.Pow(0.5f, (float)GetProcessDeltaTime() * lerpSpeed));
+	}
+
 	private void PhysicsInterpolation()
 	{
 		if (_physicsInterpolate)
@@ -322,7 +343,7 @@ public partial class PlayerMovement : CharacterBody3D
 		if (_speedLabel == null)
 			return;
 
-		_speedLabel.Text = $"VELOCITY: {Mathf.Round(Velocity.Length())}";
+		_speedLabel.Text = $"VELOCITY: {Velocity.Length()}";
 		_momentumLabel.Text = $"MOMENTUM: {Mathf.Round(momentum)}";
 		_stateLabel.Text = $"STATE: {FSM.CurrentState.Name}";
 		_desiredSpeedLabel.Text = $"DESIRED SPEED: {Mathf.Round(currentSpeed)}";
@@ -343,7 +364,7 @@ public partial class PlayerMovement : CharacterBody3D
 			_animator.Set("parameters/moveState/conditions/jump", (Input.IsActionJustPressed("jump") && airTime < _coyoteTime && 
 						_jumpsDone < _jumps && !ceilingRay.IsColliding() && (!stepCast.IsColliding() 
 						|| FSM.CurrentState is PlayerIdle)) || 
-						(Input.IsActionJustPressed("jump") && (FSM.CurrentState is PlayerWallrun || FSM.CurrentState is PlayerVerticalWallrun)));
+						(Input.IsActionJustPressed("jump") && (FSM.CurrentState is PlayerWallrun || FSM.CurrentState is PlayerLadder)));
 
 			_animator.Set("parameters/moveState/conditions/inAir", FSM.CurrentState is PlayerAir);
 			
@@ -351,6 +372,8 @@ public partial class PlayerMovement : CharacterBody3D
 
 			_animator.Set("parameters/moveState/conditions/wallrun", FSM.CurrentState is PlayerWallrun 
 						|| FSM.CurrentState is PlayerVerticalWallrun);
+
+			_animator.Set("parameters/moveState/conditions/isLadder", FSM.CurrentState is PlayerLadder && inputDirection.Length() >= 0.9f);
 
 
 			_animator.Set("parameters/moveState/wallrun/conditions/left_wallrun",
@@ -432,12 +455,75 @@ public partial class PlayerMovement : CharacterBody3D
 		_vaultCast.GlobalPosition = _vaultPoint;
 
 		if (inputDirection.Y < 0f && !ceilingRay.IsColliding() && _vaultCast.IsColliding() && _vaultCheck.IsColliding()
-				&& !stepCast.IsColliding() && vaultElevation > minElevation && (angleToFloor > 80f || Mathf.IsZeroApprox(angleToFloor)))
+				&& !stepCast.IsColliding() && (angleToFloor > 80f || Mathf.IsZeroApprox(angleToFloor)))
 		{
-			vaultPoint = _vaultPoint;
-			DebugDraw3D.DrawSphere(_vaultPoint, 0.25f, Colors.Red);
+			if (vaultElevation > minElevation || IsOnWall())
+			{
+				vaultPoint = _vaultPoint;
+				DebugDraw3D.DrawSphere(_vaultPoint, 0.25f, Colors.Red);
 
-			return true;
+				return true;
+			}
+			
+		}
+
+		return false;
+	}
+
+	public bool CheckLadder()
+	{
+		if (currentLadder == null)
+			return false;
+
+		Node3D area = currentLadder.GetNode<Node3D>("LadderArea/LadderCollider");
+
+		if (area == null)
+			return false;
+
+		if (!isLadder)
+			return false;
+
+		// Check if player is facing ladder
+		Vector3 wallDirection = default;
+		Vector3 wallPoint = default;
+
+		// Get forward ray
+		bool forwardRay = SendRayInDirection(-GlobalBasis.Z, 0.5f, out Vector3 rayNormal, out Vector3 rayPoint, out GodotObject collider);
+
+		float dotCollision = Mathf.Abs(rayNormal.Dot(Vector3.Up));
+
+		// Threshold to how slanted the wall can be
+		if (dotCollision < 0.3f)
+		{
+			Vector3 playerForward = -GlobalBasis.Z;
+			
+			float forwardAngle = Mathf.RadToDeg(playerForward.AngleTo(-rayNormal));
+
+			wallDirection = GlobalBasis.X.Cross(rayNormal).Normalized();
+			wallDirection = new Vector3(
+				Mathf.Abs(wallDirection.X),
+				Mathf.Abs(wallDirection.Y),
+				Mathf.Abs(wallDirection.Z)
+			);
+
+			Vector3 ladderZOffset = -rayNormal * -0.5f;
+
+			float nearestBarHeight = Mathf.Round(GlobalPosition.Y / currentLadder.BarSpacing) * currentLadder.BarSpacing + 1f;
+			wallPoint = new Vector3(area.GlobalPosition.X, nearestBarHeight, area.GlobalPosition.Z);
+
+			// Check if not facing completely side ways to the wall and in general direction
+			if (forwardAngle > 0 && forwardAngle < 20f)
+			{
+				// Check if player velocity is more than or equal to 0
+				if (inputDirection.Y < 0f)
+				{
+					DebugDraw3D.DrawArrow(wallPoint, wallPoint + (wallDirection * 3f), Colors.Red, 0.2f, false, 5f);
+
+					
+					GlobalPosition = wallPoint + ladderZOffset;
+					return true;
+				}
+			}
 		}
 
 		return false;
@@ -605,12 +691,6 @@ public partial class PlayerMovement : CharacterBody3D
 		}
 
 		return false;
-
-		// Check if forward ray colliding
-
-		// Check if player is facing upward
-
-		// Check if y velocity is positive or 0
 	}
 
 	public bool SendRayInDirection(Vector3 direction, float range, out Vector3 rayNormal, out Vector3 rayPoint)
@@ -624,7 +704,9 @@ public partial class PlayerMovement : CharacterBody3D
 		rayNormal = default(Vector3);
 		rayPoint = default(Vector3);
 
-        PhysicsRayQueryParameters3D parameters = PhysicsRayQueryParameters3D.Create(rayOrigin, rayEnd, 2);
+		uint layerMask = (1 << 1)  | (1 << 4);
+
+        PhysicsRayQueryParameters3D parameters = PhysicsRayQueryParameters3D.Create(rayOrigin, rayEnd, layerMask);
 		parameters.HitBackFaces = false;
 		parameters.HitFromInside = false;
 
@@ -634,12 +716,52 @@ public partial class PlayerMovement : CharacterBody3D
         {
 			rayArray.TryGetValue("normal", out Variant normal);
 			rayArray.TryGetValue("position", out Variant position);
-			rayArray.TryGetValue("collider", out Variant collider);
+			rayArray.TryGetValue("collider", out Variant colliderVariant);
 
 			DebugDraw3D.DrawArrow(rayOrigin, rayEnd, Colors.GreenYellow, 0.2f);
 
 			rayNormal = normal.AsVector3();
 			rayPoint = position.AsVector3();
+
+            return true;
+        }
+
+		return false;
+	}
+
+	public bool SendRayInDirection(Vector3 direction, float range, out Vector3 rayNormal, out Vector3 rayPoint, out GodotObject collider)
+	{
+		// Send ray in direction of wall
+        PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
+
+        Vector3 rayOrigin = _camera.GlobalPosition;
+        Vector3 rayEnd = rayOrigin + (direction * range);
+
+		rayNormal = default(Vector3);
+		rayPoint = default(Vector3);
+		collider = default(GodotObject);
+
+		uint layerMask = (1 << 1)  | (1 << 4);
+
+        PhysicsRayQueryParameters3D parameters = PhysicsRayQueryParameters3D.Create(rayOrigin, rayEnd, layerMask);
+		parameters.HitBackFaces = false;
+		parameters.HitFromInside = false;
+		parameters.CollideWithAreas = true;
+		parameters.CollideWithBodies = true;
+
+        var rayArray = spaceState.IntersectRay(parameters);
+
+        if (rayArray.ContainsKey("collider"))
+        {
+			rayArray.TryGetValue("normal", out Variant normal);
+			rayArray.TryGetValue("position", out Variant position);
+			rayArray.TryGetValue("collider", out Variant colliderVariant);
+
+			DebugDraw3D.DrawArrow(rayOrigin, rayEnd, Colors.GreenYellow, 0.2f);
+
+			rayNormal = normal.AsVector3();
+			rayPoint = position.AsVector3();
+			collider = colliderVariant.AsGodotObject();
 
             return true;
         }
@@ -683,11 +805,11 @@ public partial class PlayerMovement : CharacterBody3D
 		// If not free looking return to normal camera state
 		else
 		{
-			if (FSM.CurrentState is not PlayerWallrun)
+			if (FSM.CurrentState is not PlayerWallrun && FSM.CurrentState is not PlayerLadder)
 			{
 				camState = CameraState.Normal;
 
-				Vector3 neckRot = new Vector3(_neck.Rotation.X, 0f, _neck.Rotation.Z);
+				Vector3 neckRot = new Vector3(0f, 0f, _neck.Rotation.Z);
 				_neck.Rotation = _neck.Rotation.Lerp(neckRot, 1.0f - Mathf.Pow(0.5f, (float)delta * lerpSpeed));
 
 				Vector3 eyeRot = new Vector3(_eyes.Rotation.X, _eyes.Rotation.Y, 0f);
@@ -757,7 +879,7 @@ public partial class PlayerMovement : CharacterBody3D
 		}
 		else
 		{
-			if (FSM.CurrentState is not PlayerWallrun)
+			if (!FSM.CurrentStateNameIs("PlayerWallrun") && !FSM.CurrentStateNameIs("PlayerLadder"))
 			{
 				playerVelocity.Y -= gravity * (float)delta;
 
@@ -769,13 +891,17 @@ public partial class PlayerMovement : CharacterBody3D
 			}
 		}
 
-		if (FSM.CurrentState is not PlayerVault && FSM.CurrentState is not PlayerWallrun)
+		if (FSM.CurrentState is not PlayerVault || FSM.CurrentState is not PlayerWallrun
+			|| FSM.CurrentState is not PlayerLadder || FSM.CurrentState is not PlayerVerticalWallrun)
 			HandleJump(_jumpVelocity);
 
 		if (direction != Vector3.Zero)
 		{
-			playerVelocity.X = direction.X * currentSpeed;
-			playerVelocity.Z = direction.Z * currentSpeed;
+			if (FSM.CurrentState is not PlayerLadder)
+			{
+				playerVelocity.X = direction.X * currentSpeed;
+				playerVelocity.Z = direction.Z * currentSpeed;
+			}
 		}
 		else
 		{
@@ -790,5 +916,27 @@ public partial class PlayerMovement : CharacterBody3D
 		
 		_previousSprintAction = sprintAction;
 		MoveAndSlide();
+	}
+
+	private void OnCollisionCheckerAreaEntered(Area3D area)
+	{
+		string group = CollisionChecker.GetGroupFromBody(area);
+
+		// Check if current group is ladder
+		if (group == "Ladder")
+		{
+			isLadder = true;
+			currentLadder = area.GetParent<Ladder>();
+		}
+	}
+
+	private void OnCollisionCheckerAreaExited(Area3D area)
+	{
+		string group = CollisionChecker.GetGroupFromBody(area);
+
+		if (group == "Ladder")
+		{
+			isLadder = false;
+		}
 	}
 }

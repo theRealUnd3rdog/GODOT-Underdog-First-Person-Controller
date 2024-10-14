@@ -1,4 +1,4 @@
-[gd_scene load_steps=170 format=3 uid="uid://ddp62lqxgj3c2"]
+[gd_scene load_steps=185 format=3 uid="uid://ddp62lqxgj3c2"]
 
 [ext_resource type="Script" path="res://Scripts/PlayerMovement.cs" id="1_1x2u3"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/GodotParadiseFiniteStateMachine.cs" id="2_gl0jx"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://Scripts/ScreenShake/CamShake.cs" id="10_4skf1"]
 [ext_resource type="Script" path="res://Scripts/SmoothFollow.cs" id="11_kqg4n"]
 [ext_resource type="Script" path="res://Scripts/PlayerMovementStates/PlayerVerticalWallrun.cs" id="11_u33ky"]
+[ext_resource type="Script" path="res://Scripts/PlayerMovementStates/PlayerLadder.cs" id="12_pefii"]
 [ext_resource type="AudioStream" uid="uid://x4uffvia5i1w" path="res://Sounds/Jump_01.wav" id="14_qsgh0"]
 [ext_resource type="AudioStream" uid="uid://o4o1xhqar4vl" path="res://Sounds/Footsteps/Step_Concrete_03_zap.mp3" id="15_iq4pg"]
 [ext_resource type="Script" path="res://Scripts/CollisionChecker.cs" id="16_e6y67"]
@@ -46,7 +47,9 @@
 [ext_resource type="Texture2D" uid="uid://b0kly854epj2c" path="res://Textures/Smoke/smoke_01.png" id="36_hv26i"]
 [ext_resource type="AudioStream" uid="uid://sl63oq587wq7" path="res://Sounds/WallRun_04.wav" id="36_pvb8y"]
 [ext_resource type="Script" path="res://Scripts/PlayerPostProcessing.cs" id="37_73sd4"]
+[ext_resource type="AudioStream" uid="uid://ctyki8eddff1a" path="res://Sounds/Ladder/ladder_start.wav" id="37_v5ein"]
 [ext_resource type="Script" path="res://Scripts/NewStepper.cs" id="38_kln8r"]
+[ext_resource type="AudioStream" uid="uid://coup4a0c08ytu" path="res://Sounds/Ladder/ladder_move.wav" id="38_m203q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yih85"]
 custom_solver_bias = 0.1
@@ -71,10 +74,46 @@ radius = 1.0
 
 [sub_resource type="Animation" id="Animation_nbwkx"]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CamHead:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CamHead:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_cnodb"]
 resource_name = "idle"
 loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CamHead:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_fyquc"]
 resource_name = "inAir"
@@ -120,6 +159,36 @@ tracks/2/keys = {
 "args": [NodePath("Jump2"), ExtResource("14_qsgh0")],
 "method": &"PlayAnyAudio"
 }]
+}
+
+[sub_resource type="Animation" id="Animation_pxtj4"]
+resource_name = "ladder_loop"
+length = 0.75
+loop_mode = 1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CamHead:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.375, 0.5, 0.75),
+"transitions": PackedFloat32Array(0.482968, 0.482968, 0.482968, 0.482968, 0.482968),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0.0174533), Vector3(0, 0, 0), Vector3(0, 0, -0.0174533), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CamHead:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.375, 0.5, 0.75),
+"transitions": PackedFloat32Array(0.482968, 0.482968, 0.482968, 0.482968, 0.482968),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.1, -0.1), Vector3(0, 3.72529e-09, -3.72529e-09), Vector3(0, 0.1, -0.1), Vector3(0, 3.72529e-09, -3.72529e-09)]
 }
 
 [sub_resource type="Animation" id="Animation_mv1ru"]
@@ -432,6 +501,7 @@ _data = {
 "idle": SubResource("Animation_cnodb"),
 "inAir": SubResource("Animation_fyquc"),
 "jump": SubResource("Animation_s6r41"),
+"ladder_loop_up": SubResource("Animation_pxtj4"),
 "landing": SubResource("Animation_mv1ru"),
 "landing_2": SubResource("Animation_fyqsm"),
 "left_wallrun": SubResource("Animation_hk614"),
@@ -608,6 +678,19 @@ shading_mode = 0
 albedo_color = Color(0.160784, 1, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_kv8y1"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ydl80"]
+animation = &"ladder_loop_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_a71o1"]
+xfade_time = 0.05
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_kx5uk"]
+states/ladder_loop_up/node = SubResource("AnimationNodeAnimation_ydl80")
+states/ladder_loop_up/position = Vector2(409, 100)
+transitions = ["Start", "ladder_loop_up", SubResource("AnimationNodeStateMachineTransition_a71o1")]
+graph_offset = Vector2(-149, 17)
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8mn46"]
 animation = &"inAir"
@@ -902,6 +985,7 @@ advance_condition = &"wallrun"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ebtmh"]
 xfade_time = 0.35
+switch_mode = 1
 advance_mode = 2
 advance_condition = &"inAir"
 
@@ -931,7 +1015,46 @@ priority = 3
 advance_mode = 0
 advance_condition = &"idle"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_52itl"]
+advance_mode = 2
+advance_condition = &"isLadder"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_knbtf"]
+advance_mode = 2
+advance_condition = &"isLadder"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2raie"]
+advance_mode = 2
+advance_condition = &"isLadder"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_775yd"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_p5axl"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_f6qpx"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"inAir"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_24q5d"]
+xfade_time = 0.05
+advance_mode = 2
+advance_condition = &"isLadder"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y2o8j"]
+xfade_time = 0.05
+advance_mode = 2
+advance_condition = &"isLadder"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_4ibcj"]
+states/Ladder/node = SubResource("AnimationNodeStateMachine_kx5uk")
+states/Ladder/position = Vector2(518, 317)
 states/Start/position = Vector2(820, -52)
 states/air/node = SubResource("AnimationNodeStateMachine_i7tfk")
 states/air/position = Vector2(444, -132)
@@ -940,18 +1063,18 @@ states/idle/position = Vector2(672, -52)
 states/jump/node = SubResource("AnimationNodeAnimation_te1gy")
 states/jump/position = Vector2(233, -367)
 states/move/node = SubResource("AnimationNodeStateMachine_gayc6")
-states/move/position = Vector2(403, 81)
+states/move/position = Vector2(314, 70)
 states/sliding/node = SubResource("AnimationNodeStateMachine_m7npm")
 states/sliding/position = Vector2(7, -44)
 states/vault/node = SubResource("AnimationNodeAnimation_rht2b")
 states/vault/position = Vector2(184, -174)
 states/wallrun/node = SubResource("AnimationNodeStateMachine_32ios")
 states/wallrun/position = Vector2(672, -247)
-transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_ohbtc"), "idle", "move", SubResource("AnimationNodeStateMachineTransition_58yxs"), "move", "idle", SubResource("AnimationNodeStateMachineTransition_ok72i"), "move", "jump", SubResource("AnimationNodeStateMachineTransition_onf81"), "idle", "jump", SubResource("AnimationNodeStateMachineTransition_g16to"), "jump", "air", SubResource("AnimationNodeStateMachineTransition_0e8h0"), "move", "air", SubResource("AnimationNodeStateMachineTransition_jqjf7"), "idle", "air", SubResource("AnimationNodeStateMachineTransition_osb1d"), "air", "move", SubResource("AnimationNodeStateMachineTransition_nuq7q"), "air", "jump", SubResource("AnimationNodeStateMachineTransition_k00lm"), "air", "idle", SubResource("AnimationNodeStateMachineTransition_kbohn"), "sliding", "air", SubResource("AnimationNodeStateMachineTransition_bysxd"), "air", "sliding", SubResource("AnimationNodeStateMachineTransition_fuksl"), "move", "sliding", SubResource("AnimationNodeStateMachineTransition_x8jey"), "sliding", "move", SubResource("AnimationNodeStateMachineTransition_2wr2a"), "sliding", "jump", SubResource("AnimationNodeStateMachineTransition_8wsku"), "air", "vault", SubResource("AnimationNodeStateMachineTransition_pl3ga"), "sliding", "vault", SubResource("AnimationNodeStateMachineTransition_u4wft"), "move", "vault", SubResource("AnimationNodeStateMachineTransition_5ljx6"), "vault", "move", SubResource("AnimationNodeStateMachineTransition_iep2u"), "vault", "air", SubResource("AnimationNodeStateMachineTransition_6105d"), "jump", "vault", SubResource("AnimationNodeStateMachineTransition_up3li"), "air", "wallrun", SubResource("AnimationNodeStateMachineTransition_sfo1y"), "wallrun", "air", SubResource("AnimationNodeStateMachineTransition_ebtmh"), "wallrun", "jump", SubResource("AnimationNodeStateMachineTransition_et8sg"), "wallrun", "move", SubResource("AnimationNodeStateMachineTransition_jgj5n"), "jump", "wallrun", SubResource("AnimationNodeStateMachineTransition_26t02"), "vault", "wallrun", SubResource("AnimationNodeStateMachineTransition_g3rwk"), "wallrun", "idle", SubResource("AnimationNodeStateMachineTransition_17xna")]
-graph_offset = Vector2(-81, -299)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_ohbtc"), "idle", "move", SubResource("AnimationNodeStateMachineTransition_58yxs"), "move", "idle", SubResource("AnimationNodeStateMachineTransition_ok72i"), "move", "jump", SubResource("AnimationNodeStateMachineTransition_onf81"), "idle", "jump", SubResource("AnimationNodeStateMachineTransition_g16to"), "jump", "air", SubResource("AnimationNodeStateMachineTransition_0e8h0"), "move", "air", SubResource("AnimationNodeStateMachineTransition_jqjf7"), "idle", "air", SubResource("AnimationNodeStateMachineTransition_osb1d"), "air", "move", SubResource("AnimationNodeStateMachineTransition_nuq7q"), "air", "jump", SubResource("AnimationNodeStateMachineTransition_k00lm"), "air", "idle", SubResource("AnimationNodeStateMachineTransition_kbohn"), "sliding", "air", SubResource("AnimationNodeStateMachineTransition_bysxd"), "air", "sliding", SubResource("AnimationNodeStateMachineTransition_fuksl"), "move", "sliding", SubResource("AnimationNodeStateMachineTransition_x8jey"), "sliding", "move", SubResource("AnimationNodeStateMachineTransition_2wr2a"), "sliding", "jump", SubResource("AnimationNodeStateMachineTransition_8wsku"), "air", "vault", SubResource("AnimationNodeStateMachineTransition_pl3ga"), "sliding", "vault", SubResource("AnimationNodeStateMachineTransition_u4wft"), "move", "vault", SubResource("AnimationNodeStateMachineTransition_5ljx6"), "vault", "move", SubResource("AnimationNodeStateMachineTransition_iep2u"), "vault", "air", SubResource("AnimationNodeStateMachineTransition_6105d"), "jump", "vault", SubResource("AnimationNodeStateMachineTransition_up3li"), "air", "wallrun", SubResource("AnimationNodeStateMachineTransition_sfo1y"), "wallrun", "air", SubResource("AnimationNodeStateMachineTransition_ebtmh"), "wallrun", "jump", SubResource("AnimationNodeStateMachineTransition_et8sg"), "wallrun", "move", SubResource("AnimationNodeStateMachineTransition_jgj5n"), "jump", "wallrun", SubResource("AnimationNodeStateMachineTransition_26t02"), "vault", "wallrun", SubResource("AnimationNodeStateMachineTransition_g3rwk"), "wallrun", "idle", SubResource("AnimationNodeStateMachineTransition_17xna"), "move", "Ladder", SubResource("AnimationNodeStateMachineTransition_52itl"), "air", "Ladder", SubResource("AnimationNodeStateMachineTransition_knbtf"), "idle", "Ladder", SubResource("AnimationNodeStateMachineTransition_2raie"), "Ladder", "move", SubResource("AnimationNodeStateMachineTransition_775yd"), "Ladder", "idle", SubResource("AnimationNodeStateMachineTransition_p5axl"), "Ladder", "air", SubResource("AnimationNodeStateMachineTransition_f6qpx"), "jump", "Ladder", SubResource("AnimationNodeStateMachineTransition_24q5d"), "sliding", "Ladder", SubResource("AnimationNodeStateMachineTransition_y2o8j")]
+graph_offset = Vector2(-152, -182)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_osdti"]
-graph_offset = Vector2(-591, 229)
+graph_offset = Vector2(-577.398, 204.183)
 nodes/moveState/node = SubResource("AnimationNodeStateMachine_4ibcj")
 nodes/moveState/position = Vector2(-220, 120)
 node_connections = [&"output", 0, &"moveState"]
@@ -975,6 +1098,7 @@ _standingCollider = NodePath("Standing_collision_shape")
 _animator = NodePath("AnimationTree")
 maxSpeed = 13.0
 accelerationRate = 2.0
+_airLerpSpeed = 1.5
 _jumpVelocity = 5.7
 _coyoteTime = 0.25
 _zRotationLerp = 15.0
@@ -992,6 +1116,7 @@ wallRunTime = 1.0
 wallRunSpeed = 17.0
 wallFrictionCoefficient = 0.05
 wallJumpSpeed = 10.0
+ladderSpeed = 3.5
 _headBobWallrunSpeed = 35.0
 _headBobWallrunIntensity = 0.3
 mouseSensitivityX = 0.25
@@ -1039,6 +1164,11 @@ script = ExtResource("10_1d7ad")
 
 [node name="PlayerVerticalWallrun" type="Node" parent="FSM"]
 script = ExtResource("11_u33ky")
+
+[node name="PlayerLadder" type="Node" parent="FSM" node_paths=PackedStringArray("_ladderStart", "_ladderMove")]
+script = ExtResource("12_pefii")
+_ladderStart = NodePath("../../PlayerAudio/Ladder_Start")
+_ladderMove = NodePath("../../PlayerAudio/Ladder_Move")
 
 [node name="Standing_collision_shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -1122,7 +1252,7 @@ libraries = {
 }
 
 [node name="CollisionChecker" type="Area3D" parent="."]
-collision_mask = 14
+collision_mask = 30
 script = ExtResource("16_e6y67")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CollisionChecker"]
@@ -1151,6 +1281,22 @@ _vaultOut = NodePath("VaultEnd")
 _wallrun = NodePath("Wallrun2")
 
 [node name="FootStep" parent="PlayerAudio" instance=ExtResource("34_0ya74")]
+volume_db = -8.0
+attenuation_filter_cutoff_hz = 20500.0
+_maxRaycastDistance = 100.0
+_useLowpassEffect = false
+_wallLowpassCutoffAmt = 1500
+
+[node name="Ladder_Start" parent="PlayerAudio" instance=ExtResource("34_0ya74")]
+stream = ExtResource("37_v5ein")
+volume_db = -8.0
+attenuation_filter_cutoff_hz = 20500.0
+_maxRaycastDistance = 100.0
+_useLowpassEffect = false
+_wallLowpassCutoffAmt = 1500
+
+[node name="Ladder_Move" parent="PlayerAudio" instance=ExtResource("34_0ya74")]
+stream = ExtResource("38_m203q")
 volume_db = -8.0
 attenuation_filter_cutoff_hz = 20500.0
 _maxRaycastDistance = 100.0
@@ -1417,6 +1563,7 @@ advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../Mesh/Neck/Head/Eyes/AnimationPlayer")
 parameters/moveState/conditions/idle = true
 parameters/moveState/conditions/inAir = false
+parameters/moveState/conditions/isLadder = false
 parameters/moveState/conditions/jump = false
 parameters/moveState/conditions/moving = false
 parameters/moveState/conditions/vault = false
@@ -1499,3 +1646,6 @@ uppercase = true
 
 [node name="ResetPos" type="Node3D" parent="."]
 top_level = true
+
+[connection signal="area_entered" from="CollisionChecker" to="." method="OnCollisionCheckerAreaEntered"]
+[connection signal="area_exited" from="CollisionChecker" to="." method="OnCollisionCheckerAreaExited"]

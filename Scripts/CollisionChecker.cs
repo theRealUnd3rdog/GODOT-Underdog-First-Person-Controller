@@ -6,8 +6,8 @@ using System.Linq;
 public partial class CollisionChecker : Godot.Area3D
 {
     public static event Action<string> OnGroupChange; // Event that's invoked whenever the collision group (tag) changes
+    public string CurrentTouchingGroup;
     private Array<string> _touchingGroups = new();
-    private string _currentTouchingGroup;
 
     public override void _Ready()
     {
@@ -36,7 +36,7 @@ public partial class CollisionChecker : Godot.Area3D
         AreaExited -= StopRepeatCall;
     }
 
-	public string GetGroupFromBody(Node3D body)
+	public static string GetGroupFromBody(Node3D body)
 	{
         char[] trimArr = {'"', '[', '&', ']'};
         string group = string.Empty;
@@ -54,18 +54,18 @@ public partial class CollisionChecker : Godot.Area3D
         // Priority
         if (_touchingGroups.Contains("Water"))
         {
-            if (_currentTouchingGroup != "Water")
+            if (CurrentTouchingGroup != "Water")
             {
-                _currentTouchingGroup = "Water";
-                OnGroupChange?.Invoke(_currentTouchingGroup);
+                CurrentTouchingGroup = "Water";
+                OnGroupChange?.Invoke(CurrentTouchingGroup);
             }
         }
         else
         {
-            if (_currentTouchingGroup != _touchingGroups.LastOrDefault(string.Empty))
+            if (CurrentTouchingGroup != _touchingGroups.LastOrDefault(string.Empty))
             {
-                _currentTouchingGroup = _touchingGroups.LastOrDefault(string.Empty);
-                OnGroupChange?.Invoke(_currentTouchingGroup);
+                CurrentTouchingGroup = _touchingGroups.LastOrDefault(string.Empty);
+                OnGroupChange?.Invoke(CurrentTouchingGroup);
             }
         }
     }
@@ -76,18 +76,18 @@ public partial class CollisionChecker : Godot.Area3D
 
         if (_touchingGroups.Contains("Water"))
         {
-            if (_currentTouchingGroup != "Water")
+            if (CurrentTouchingGroup != "Water")
             {
-                _currentTouchingGroup = "Water";
-                OnGroupChange?.Invoke(_currentTouchingGroup);
+                CurrentTouchingGroup = "Water";
+                OnGroupChange?.Invoke(CurrentTouchingGroup);
             }
         }
         else
         {
-            if (_currentTouchingGroup != _touchingGroups.LastOrDefault(string.Empty))
+            if (CurrentTouchingGroup != _touchingGroups.LastOrDefault(string.Empty))
             {
-                _currentTouchingGroup = _touchingGroups.LastOrDefault(string.Empty);
-                OnGroupChange?.Invoke(_currentTouchingGroup);
+                CurrentTouchingGroup = _touchingGroups.LastOrDefault(string.Empty);
+                OnGroupChange?.Invoke(CurrentTouchingGroup);
             }
         }
     }

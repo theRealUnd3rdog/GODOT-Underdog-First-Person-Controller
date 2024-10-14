@@ -43,6 +43,9 @@ public partial class PlayerSprint : PlayerMovementState
 			EmitSignal(SignalName.StateFinished, "PlayerAir", new());
 		}
 
-        
+        if (Movement.CheckLadder())
+        {
+            EmitSignal(SignalName.StateFinished, "PlayerLadder", new());
+        }
     }
 }

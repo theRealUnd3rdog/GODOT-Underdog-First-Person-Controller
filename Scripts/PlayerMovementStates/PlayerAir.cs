@@ -66,7 +66,7 @@ public partial class PlayerAir : PlayerMovementState
         if (Movement.CheckVerticalWall(out Vector3 verticalWallDir, out Vector3 verticalWallPoint)
             && !Movement.IsOnFloor()
             && Movement.FSM.PreviousState is not PlayerWallrun
-            && Movement.FSM.PreviousState is not PlayerVerticalWallrun)
+            && Movement.FSM.PreviousState is not PlayerVerticalWallrun && !Movement.isLadder)
         {
             Movement.airTime = 0f;
             EmitSignal(SignalName.StateFinished, "PlayerVerticalWallrun", new());
@@ -75,6 +75,11 @@ public partial class PlayerAir : PlayerMovementState
         if (Movement.CheckVault(delta, out Vector3 vaultPoint))
         {
             EmitSignal(SignalName.StateFinished, "PlayerVault", new());
+        }
+
+        if (Movement.CheckLadder())
+        {
+            EmitSignal(SignalName.StateFinished, "PlayerLadder", new());
         }
     }
 }

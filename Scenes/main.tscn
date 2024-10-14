@@ -27,7 +27,7 @@
 background_mode = 2
 background_energy_multiplier = 1.48
 sky = ExtResource("2_fb8vh")
-sky_rotation = Vector3(0, 1.71236, 0)
+sky_rotation = Vector3(0, 0.0025981, 0)
 ambient_light_source = 3
 reflected_light_source = 2
 tonemap_mode = 2
@@ -307,17 +307,17 @@ _refFontOffset = 1.0
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.509644, 51.5, 3.46703)
 size = Vector3(2, 2, 2)
 _refText = "BLENDER CUBE"
-_refFontSize = 150
+RefFontSize = 150
+MeasurementFontSize = 70
 _refFontOffset = 1.0
-_measurementFontSize = 70
 
 [node name="CSGRef3" parent="Stage/Measurements" instance=ExtResource("10_pi8do")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.960266, 51.75, -2.28297)
 size = Vector3(1.5, 2.5, 0.1)
 _refText = "DOOR"
-_refFontSize = 150
+RefFontSize = 150
+MeasurementFontSize = 70
 _refFontOffset = 1.0
-_measurementFontSize = 70
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="Stage/Measurements"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.25, 51.5, -7.25)

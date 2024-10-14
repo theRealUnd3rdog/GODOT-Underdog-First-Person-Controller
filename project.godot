@@ -31,7 +31,7 @@ PostProcessor="*res://Scenes/post_processor.tscn"
 
 window/size/viewport_width=1366
 window/size/viewport_height=720
-window/vsync/vsync_mode=0
+window/size/mode=3
 window/screen_space_roughness_limiter/enabled=false
 
 [dotnet]
@@ -104,6 +104,7 @@ screenShake={
 3d_physics/layer_2="Ground"
 3d_physics/layer_3="Water"
 3d_physics/layer_4="Steps"
+3d_physics/layer_5="Ladder"
 
 [network]
 
