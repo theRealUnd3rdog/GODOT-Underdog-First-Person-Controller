@@ -37,8 +37,10 @@ public partial class PlayerMovement : CharacterBody3D
 	[Export] public float accelerationRate {private set; get;} = 1.0f;
 	[Export] public float lerpSpeed {private set; get;} = 10.0f; // Gradually changes a value. (Adding smoothing to values)
 	[Export] private float _airLerpSpeed = 3.0f;
+    [Export] private bool _enableJoyStick = true;
+    [Export] private bool _invertLook = false;
 
-	[ExportCategory("Jumping")]
+    [ExportCategory("Jumping")]
 	[Export] private float _jumpVelocity = 4.5f;
 	[Export] private float _coyoteTime = 0.5f;
 	[Export] private int _jumps = 1;
@@ -56,7 +58,13 @@ public partial class PlayerMovement : CharacterBody3D
 	private float _rotationX = 0f;
 	private float _rotationZ = 0f;
 
-	[ExportSubgroup("Z Tilt")]
+    // joystick inputs
+    private float _currentRotationY = 0.0f; // Store the current Y-axis rotation (horizontal)
+    private float _deadzoneThreshold = 0.1f; // Define a joystick deadzone threshold
+    private bool _isUsingJoystick = false;
+    private Vector2 _joyDir = Vector2.Zero;
+
+    [ExportSubgroup("Z Tilt")]
 	[Export] private float _zRotationLerp = 7f;
 	[Export] private float _zClamp = 5f;
 
@@ -129,9 +137,12 @@ public partial class PlayerMovement : CharacterBody3D
 	[ExportSubgroup("Sensitivity")]
 	[Export(PropertyHint.Range, "0, 1,")] public float mouseSensitivityX = 0.4f;
 	[Export(PropertyHint.Range, "0, 1,")] public float mouseSensitivityY = 0.4f;
+    [Export(PropertyHint.Range, "0, 15,")] public int joystickSensitivityX = 5;
+    [Export(PropertyHint.Range, "0, 15,")] public int joystickSensitivityY = 5;
+    [Export(PropertyHint.Range, "0, 20,")] public int smoothingSpeed = 5;
 
 
-	[ExportSubgroup("Free Looking")]
+    [ExportSubgroup("Free Looking")]
 	[Export] private float _freeLookTilt = 0.3f;
 
 	[ExportSubgroup("Field of View")]
@@ -222,7 +233,41 @@ public partial class PlayerMovement : CharacterBody3D
     {
 		HandleZRotation((float)delta);
 
-		if (Input.IsKeyPressed(Key.R) && _resetPosition != null)
+        if (_enableJoyStick)
+        {
+            float joystickX = Input.GetAxis("look_left", "look_right");
+            float joystickY = Input.GetAxis("look_up", "look_down");
+
+            if (Mathf.Abs(joystickX) > _deadzoneThreshold || Mathf.Abs(joystickY) > _deadzoneThreshold)
+            {
+                Vector2 joyDir = new Vector2(joystickX, joystickY);
+                _joyDir = joyDir;
+                _isUsingJoystick = true;
+                switch (camState)
+                {
+                    case CameraState.Freelooking:
+                        if (FSM.CurrentState is PlayerSlide)
+                        {
+                            RotatePlayer(_joyDir.X, _joyDir.Y, true, delta);
+                        }
+                        else
+                        {
+                            FreeLookRotation(_joyDir.X, -120f, 120f);
+                        }
+                        break;
+
+                    case CameraState.Normal:
+                        RotatePlayer(_joyDir.X, _joyDir.Y, true, delta);
+                        break;
+                }
+            }
+            else
+            {
+                _isUsingJoystick = false;
+            }
+        }
+
+        if (Input.IsKeyPressed(Key.R) && _resetPosition != null)
 			GlobalPosition = _resetPosition.GlobalPosition;
 
 		PhysicsInterpolation();
@@ -232,18 +277,34 @@ public partial class PlayerMovement : CharacterBody3D
 		HandleLabels();
     }
 
-	private void RotatePlayer(float mouseX, float mouseY)
-	{
-		RotateY(Mathf.DegToRad(-mouseX * mouseSensitivityX));
+    private void RotatePlayer(float inputX, float inputY, bool isJoystickInput = false, double delta = 0)
+    {
+        float sensitivityX = isJoystickInput ? joystickSensitivityX : mouseSensitivityX;
+        float sensitivityY = isJoystickInput ? joystickSensitivityY : mouseSensitivityY;
 
-		_rotationX += Mathf.DegToRad(-mouseY * mouseSensitivityY);
-		_rotationX = Mathf.Clamp(_rotationX, Mathf.DegToRad(-89f), Mathf.DegToRad(89f));
+        if (_invertLook)
+            inputY = -inputY;
 
-		_rotationZ += Mathf.DegToRad(mouseX * mouseSensitivityX * inputDirection.Length());
-		_rotationZ = Mathf.Clamp(_rotationZ, Mathf.DegToRad(-_zClamp), Mathf.DegToRad(_zClamp));
-	}
+        if (isJoystickInput)
+        {
+            float rotationAmountY = inputX * sensitivityX * smoothingSpeed * (float)delta;
 
-	public void RotatePlayerByConstraint(float mouseX, float mouseY, float leftDeg, float rightDeg)
+            // Accumulate the rotation over time for smooth horizontal rotation
+            _currentRotationY += rotationAmountY;
+            RotateY(Mathf.DegToRad(-inputX * sensitivityX));
+        }
+        else
+        {
+            RotateY(Mathf.DegToRad(-inputX * sensitivityX));
+        }
+        _rotationX += Mathf.DegToRad(-inputY * sensitivityY);
+        _rotationX = Mathf.Clamp(_rotationX, Mathf.DegToRad(-89f), Mathf.DegToRad(89f));
+
+        _rotationZ += Mathf.DegToRad(inputX * sensitivityX * inputDirection.Length());
+        _rotationZ = Mathf.Clamp(_rotationZ, Mathf.DegToRad(-_zClamp), Mathf.DegToRad(_zClamp));
+    }
+
+    public void RotatePlayerByConstraint(float mouseX, float mouseY, float leftDeg, float rightDeg)
 	{
 		float rotationY = Mathf.DegToRad(-mouseX * mouseSensitivityX);
 		rotationY = Mathf.Clamp(rotationY, Mathf.DegToRad(leftDeg), Mathf.DegToRad(rightDeg));
