@@ -80,9 +80,8 @@ public partial class PlayerLadder : PlayerMovementState
 
             if (Mathf.Abs(Movement.inputDirection.Y) > _inputThreshold)
             {
-                Movement.direction = Movement.direction.Lerp((Movement.Transform.Basis 
-                                * new Vector3(0f, -Movement.inputDirection.Y, 0f)).Normalized(), 
-                                1.0f - Mathf.Pow(0.5f, (float)GetPhysicsProcessDeltaTime() * Movement.lerpSpeed * 4));
+                Movement.direction = Movement.Transform.Basis 
+                                * new Vector3(0f, -Movement.inputDirection.Y, 0f).Normalized();
 
                 if (Mathf.Abs(Movement.direction.Y) >= 0.95f)
                 {

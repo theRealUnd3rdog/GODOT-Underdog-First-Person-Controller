@@ -193,6 +193,7 @@ public partial class GodotParadiseFiniteStateMachine : Node
         if (state.IsInsideTree())
         {
             States.Add(state.Name, GetNode(state.GetPath()));
+            state.Awake();
         }
     }
 

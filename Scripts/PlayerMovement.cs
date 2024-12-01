@@ -897,11 +897,8 @@ public partial class PlayerMovement : CharacterBody3D
 
 		if (direction != Vector3.Zero)
 		{
-			if (FSM.CurrentState is not PlayerLadder)
-			{
-				playerVelocity.X = direction.X * currentSpeed;
-				playerVelocity.Z = direction.Z * currentSpeed;
-			}
+			playerVelocity.X = direction.X * currentSpeed;
+			playerVelocity.Z = direction.Z * currentSpeed;
 		}
 		else
 		{

@@ -13,7 +13,10 @@ public partial class GodotParadiseState : Node
 	public Array<GodotParadiseState> PreviousStates = new();
 	public Dictionary parameters = new();
 
+	public virtual void Awake()
+	{
 
+	}
 
 	public virtual void Enter()
 	{

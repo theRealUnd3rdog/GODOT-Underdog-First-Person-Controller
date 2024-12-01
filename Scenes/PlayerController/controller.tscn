@@ -1,0 +1,234 @@
+[gd_scene load_steps=22 format=3 uid="uid://bno01vmd57gq1"]
+
+[ext_resource type="Script" path="res://Scripts/Player/Movement.cs" id="1_lmf3s"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/GodotParadiseFiniteStateMachine.cs" id="1_mxrkb"]
+[ext_resource type="Script" path="res://Scripts/Player/NewStates/Idle.cs" id="2_ksvsq"]
+[ext_resource type="Script" path="res://Scripts/ScreenShake/CamShake.cs" id="2_t5to1"]
+[ext_resource type="Script" path="res://Scripts/SmoothFollow.cs" id="3_atyu3"]
+[ext_resource type="Script" path="res://Scripts/Player/NewStates/Air.cs" id="3_lo0x0"]
+[ext_resource type="Script" path="res://Scripts/Player/NewStates/Walk.cs" id="4_m58u8"]
+[ext_resource type="Script" path="res://Scripts/Player/NewStates/Sprint.cs" id="5_iut7l"]
+[ext_resource type="Script" path="res://Scripts/CollisionChecker.cs" id="6_khvxg"]
+[ext_resource type="Script" path="res://Scripts/Player/NewStates/Decceleration.cs" id="7_1uwqo"]
+[ext_resource type="Script" path="res://Scripts/Player/NewStates/Jump.cs" id="7_enr4c"]
+[ext_resource type="Script" path="res://Scripts/Player/Camera.cs" id="9_bae87"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yih85"]
+custom_solver_bias = 0.1
+radius = 0.2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_45p4n"]
+custom_solver_bias = 0.1
+radius = 0.2
+height = 1.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_q80lt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bhevj"]
+cull_mode = 2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_02y88"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_prxsd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dct41"]
+size = Vector3(0.25, 1.005, 0.25)
+
+[sub_resource type="SystemFont" id="SystemFont_36c0q"]
+font_names = PackedStringArray("Evil Empire")
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_oj2fi"]
+font = SubResource("SystemFont_36c0q")
+font_size = 45
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_resetPosition", "_speedLabel", "_momentumLabel", "_stateLabel", "_animationLabel", "_desiredSpeedLabel", "_previousStateLabel")]
+collision_mask = 15
+floor_max_angle = 1.13446
+floor_snap_length = 0.3
+script = ExtResource("1_lmf3s")
+_resetPosition = NodePath("ResetPos")
+maxSpeed = 13.0
+accelerationTime = 2.0
+decelerationTime = 0.1
+_physicsInterpolate = true
+_speedLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Velocity")
+_momentumLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Momentum")
+_stateLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/State")
+_animationLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Animation")
+_desiredSpeedLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Desired Speed")
+_previousStateLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Previous State")
+
+[node name="FSM" type="Node" parent="." node_paths=PackedStringArray("CurrentState")]
+script = ExtResource("1_mxrkb")
+CurrentState = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="FSM"]
+script = ExtResource("2_ksvsq")
+
+[node name="Air" type="Node" parent="FSM"]
+script = ExtResource("3_lo0x0")
+_gravityMultiplier = 1.5
+
+[node name="Walk" type="Node" parent="FSM"]
+script = ExtResource("4_m58u8")
+_walkingSpeed = 5.0
+
+[node name="Sprint" type="Node" parent="FSM"]
+script = ExtResource("5_iut7l")
+_sprintingSpeed = 9.0
+
+[node name="Decceleration" type="Node" parent="FSM"]
+script = ExtResource("7_1uwqo")
+
+[node name="Jump" type="Node" parent="FSM"]
+script = ExtResource("7_enr4c")
+_jumpHeight = 1.5
+_timeToPeak = 0.35
+
+[node name="Standing_collision_shape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_yih85")
+
+[node name="Crouching_collision_shape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("CapsuleShape3D_45p4n")
+disabled = true
+
+[node name="CeilingRay" type="RayCast3D" parent="."]
+target_position = Vector3(0, 2, 0)
+collision_mask = 2
+hit_back_faces = false
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="Neck" type="Node3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="Head" type="Node3D" parent="Body/Neck"]
+
+[node name="Eyes" type="Node3D" parent="Body/Neck/Head"]
+
+[node name="CamHead" type="Node3D" parent="Body/Neck/Head/Eyes"]
+
+[node name="CameraShaker" type="Area3D" parent="Body/Neck/Head/Eyes/CamHead"]
+script = ExtResource("2_t5to1")
+
+[node name="CamFollow" type="Node3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker"]
+script = ExtResource("3_atyu3")
+_smoothSpeed = 50.0
+
+[node name="Camera3D" type="Camera3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker/CamFollow" node_paths=PackedStringArray("_mesh", "_head", "_neck", "_eyes")]
+unique_name_in_owner = true
+current = true
+fov = 90.0
+script = ExtResource("9_bae87")
+_mesh = NodePath("../../../../../../../CapsuleMesh")
+_head = NodePath("../../../../..")
+_neck = NodePath("../../../../../..")
+_eyes = NodePath("../../../..")
+standDuration = 0.3
+
+[node name="AudioListener3D" type="AudioListener3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker/CamFollow/Camera3D"]
+current = true
+
+[node name="ShakeCollider" type="CollisionShape3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker"]
+shape = SubResource("SphereShape3D_q80lt")
+
+[node name="CapsuleMesh" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 1, 0)
+material_override = SubResource("StandardMaterial3D_bhevj")
+cast_shadow = 3
+mesh = SubResource("CapsuleMesh_02y88")
+skeleton = NodePath("../..")
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="Body/CapsuleMesh"]
+transform = Transform3D(0.619689, 0, 0, 0, 0.215405, 0, 0, 0, 1.09266, 0, 0.693696, -0.745172)
+cast_shadow = 3
+mesh = SubResource("BoxMesh_prxsd")
+
+[node name="CollisionChecker" type="Area3D" parent="."]
+collision_mask = 30
+script = ExtResource("6_khvxg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CollisionChecker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.293706, 0)
+shape = SubResource("BoxShape3D_dct41")
+
+[node name="MovementInfo" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CanvasGroup" type="CanvasGroup" parent="MovementInfo"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="MovementInfo/CanvasGroup"]
+layer = 2
+
+[node name="State" type="Label" parent="MovementInfo/CanvasGroup/CanvasLayer"]
+offset_left = 19.0
+offset_top = 16.0
+offset_right = 176.0
+offset_bottom = 67.0
+scale = Vector2(0.5, 0.5)
+text = "STATE:"
+label_settings = SubResource("LabelSettings_oj2fi")
+uppercase = true
+
+[node name="Previous State" type="Label" parent="MovementInfo/CanvasGroup/CanvasLayer"]
+offset_left = 19.0
+offset_top = 40.0
+offset_right = 289.0
+offset_bottom = 91.0
+scale = Vector2(0.5, 0.5)
+text = "PREVIOUS STATE:"
+label_settings = SubResource("LabelSettings_oj2fi")
+uppercase = true
+
+[node name="Desired Speed" type="Label" parent="MovementInfo/CanvasGroup/CanvasLayer"]
+offset_left = 19.0
+offset_top = 66.0
+offset_right = 320.0
+offset_bottom = 117.0
+scale = Vector2(0.5, 0.5)
+text = "DESIRED VELOCITY:"
+label_settings = SubResource("LabelSettings_oj2fi")
+uppercase = true
+
+[node name="Velocity" type="Label" parent="MovementInfo/CanvasGroup/CanvasLayer"]
+offset_left = 19.0
+offset_top = 92.0
+offset_right = 176.0
+offset_bottom = 143.0
+scale = Vector2(0.5, 0.5)
+text = "VELOCITY:"
+label_settings = SubResource("LabelSettings_oj2fi")
+uppercase = true
+
+[node name="Momentum" type="Label" parent="MovementInfo/CanvasGroup/CanvasLayer"]
+offset_left = 19.0
+offset_top = 118.0
+offset_right = 220.0
+offset_bottom = 169.0
+scale = Vector2(0.5, 0.5)
+text = "MOMENTUM:"
+label_settings = SubResource("LabelSettings_oj2fi")
+uppercase = true
+
+[node name="Animation" type="Label" parent="MovementInfo/CanvasGroup/CanvasLayer"]
+offset_left = 19.0
+offset_top = 144.0
+offset_right = 220.0
+offset_bottom = 195.0
+scale = Vector2(0.5, 0.5)
+text = "ANIMATION:"
+label_settings = SubResource("LabelSettings_oj2fi")
+uppercase = true
+
+[node name="ResetPos" type="Node3D" parent="."]
+top_level = true
+
+[connection signal="area_entered" from="CollisionChecker" to="." method="OnCollisionCheckerAreaEntered"]
+[connection signal="area_exited" from="CollisionChecker" to="." method="OnCollisionCheckerAreaExited"]

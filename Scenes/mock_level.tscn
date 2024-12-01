@@ -23,14 +23,14 @@
 [ext_resource type="Texture2D" uid="uid://ca74vr1r8xb2" path="res://Textures/decals_0006_2k_3VUpnY/decals_0006_alpa_2k.png" id="18_koru1"]
 [ext_resource type="Texture2D" uid="uid://dd53cr7ij30yd" path="res://Textures/decals_0006_2k_3VUpnY/decals_0006_normal_opengl_2k.png" id="19_tmh3i"]
 [ext_resource type="Texture2D" uid="uid://bopb2fir8dyh7" path="res://Textures/decals_0006_2k_3VUpnY/decal_channel_pack.png" id="20_ryex7"]
-[ext_resource type="PackedScene" uid="uid://ddp62lqxgj3c2" path="res://Scenes/PlayerController/player.tscn" id="21_4mbcq"]
 [ext_resource type="PackedScene" uid="uid://bqekf67x42h0i" path="res://Models/Windmill/wind_mill.tscn" id="22_jfbs0"]
+[ext_resource type="PackedScene" uid="uid://bno01vmd57gq1" path="res://Scenes/PlayerController/controller.tscn" id="25_ev0gu"]
 
 [sub_resource type="Environment" id="Environment_751o0"]
 background_mode = 2
 background_energy_multiplier = 1.48
 sky = ExtResource("1_pi757")
-sky_rotation = Vector3(0, 21.8673, 0)
+sky_rotation = Vector3(0, 2.65087, 0)
 ambient_light_source = 3
 ambient_light_sky_contribution = 0.0
 reflected_light_source = 2
@@ -364,11 +364,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.529266, 3.70221, 0)
 
 [node name="L_Pillar" parent="Stage/Node3D11/Ladder2" index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14225, 3.70221, 0)
-size = Vector3(0.098, 10.6905, 0.269)
 
 [node name="R_Pillar" parent="Stage/Node3D11/Ladder2" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0837134, 3.70221, 0)
-size = Vector3(0.098, 10.6905, 0.269)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.083714, 3.70221, 0)
 
 [node name="Ladder3" parent="Stage/Node3D11" instance=ExtResource("11_c218o")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 55.6519, 48.0151, 72.7296)
@@ -378,11 +376,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.529266, 4.63371, 0)
 
 [node name="L_Pillar" parent="Stage/Node3D11/Ladder3" index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14225, 4.63371, 0)
-size = Vector3(0.098, 10.6905, 0.269)
 
 [node name="R_Pillar" parent="Stage/Node3D11/Ladder3" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0837134, 4.63371, 0)
-size = Vector3(0.098, 10.6905, 0.269)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.083714, 4.63371, 0)
 
 [node name="Mock" parent="Stage" instance=ExtResource("8_w8fo7")]
 
@@ -647,6 +643,13 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 4.4903
 size = Vector3(5, 4, 2)
 _refText = "VERTICAL RUN"
 RefFontSize = 255
+MeasurementFontSize = 160
+_refFontOffset = 1.0
+
+[node name="CSGRef5" parent="Stage/Measurements" instance=ExtResource("9_cp44h")]
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 4.49036, 51.25, -46.783)
+size = Vector3(5, 1.5, 2)
+RefFontSize = 160
 MeasurementFontSize = 160
 _refFontOffset = 1.0
 
@@ -2532,7 +2535,6 @@ size = Vector3(5, 0.25, 4)
 [node name="Ambience" type="AudioStreamPlayer2D" parent="Stage/Audio"]
 stream = ExtResource("15_csk36")
 volume_db = -15.0
-autoplay = true
 
 [node name="Wind_Ambience" type="AudioStreamPlayer2D" parent="Stage/Audio"]
 stream = ExtResource("16_xe3i1")
@@ -2593,9 +2595,6 @@ monitoring = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96046e-08, -0.75, -1.8746)
 shape = SubResource("BoxShape3D_qhwn0")
 
-[node name="Player" parent="." instance=ExtResource("21_4mbcq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.1088, 5.8935, -73.8249)
-
 [node name="WindMill" parent="." groups=["Metal"] instance=ExtResource("22_jfbs0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7226, 32.0899, -139.402)
 
@@ -2612,6 +2611,12 @@ transform = Transform3D(2.98023e-08, 0, -1, -8.74228e-08, -1, -2.72005e-15, -1, 
 
 [node name="TubeLight2" parent="." instance=ExtResource("12_hytm7")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 34.2028, 5.63624, 10.752)
+
+[node name="Player" parent="." instance=ExtResource("25_ev0gu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76.9569, 5.27538, -72.0488)
+accelerationTime = 0.5
+decelerationTime = 0.15
+directionChangeTime = 0.1
 
 [editable path="Stage/Node3D11/Ladder2"]
 [editable path="Stage/Node3D11/Ladder3"]

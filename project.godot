@@ -31,7 +31,6 @@ PostProcessor="*res://Scenes/post_processor.tscn"
 
 window/size/viewport_width=1366
 window/size/viewport_height=720
-window/size/mode=3
 window/screen_space_roughness_limiter/enabled=false
 
 [dotnet]
@@ -114,6 +113,7 @@ limits/debugger/max_chars_per_second=2000000000
 
 common/physics_jitter_fix=5.0
 3d/physics_engine="JoltPhysics3D"
+3d/default_gravity=9.81
 3d/physics_ticks_per_second=60
 jolt_3d/collisions/areas_detect_static_bodies=true
 jolt_3d/collisions/report_all_kinematic_contacts=true

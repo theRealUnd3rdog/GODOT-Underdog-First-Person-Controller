@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class SmoothFollow : Camera3D
+public partial class SmoothFollow : Node3D
 {
 	private Node3D _parentNode;
 	[Export] private float _smoothSpeed = 10.0f;
