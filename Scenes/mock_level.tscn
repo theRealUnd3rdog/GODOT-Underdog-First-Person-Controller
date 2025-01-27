@@ -30,7 +30,7 @@
 background_mode = 2
 background_energy_multiplier = 1.48
 sky = ExtResource("1_pi757")
-sky_rotation = Vector3(0, 2.65087, 0)
+sky_rotation = Vector3(0, 62.2576, 0)
 ambient_light_source = 3
 ambient_light_sky_contribution = 0.0
 reflected_light_source = 2
@@ -42,7 +42,6 @@ ssao_radius = 0.79
 ssao_intensity = 2.4
 ssao_power = 0.891905
 ssao_horizon = 0.16
-ssil_enabled = true
 ssil_radius = 0.6
 sdfgi_enabled = true
 sdfgi_bounce_feedback = 1.62
@@ -2614,9 +2613,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 34.202
 
 [node name="Player" parent="." instance=ExtResource("25_ev0gu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76.9569, 5.27538, -72.0488)
-accelerationTime = 0.5
-decelerationTime = 0.15
-directionChangeTime = 0.1
+_inputReponseTime = 0.05
 
 [editable path="Stage/Node3D11/Ladder2"]
 [editable path="Stage/Node3D11/Ladder3"]

@@ -120,5 +120,5 @@ jolt_3d/collisions/report_all_kinematic_contacts=true
 
 [rendering]
 
-anti_aliasing/quality/use_taa=true
+anti_aliasing/quality/screen_space_aa=1
 occlusion_culling/use_occlusion_culling=true

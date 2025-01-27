@@ -19,15 +19,15 @@
 [ext_resource type="Script" path="res://Scripts/Stats.cs" id="10_6u0gq"]
 [ext_resource type="Texture2D" uid="uid://bopb2fir8dyh7" path="res://Textures/decals_0006_2k_3VUpnY/decal_channel_pack.png" id="10_a7dfo"]
 [ext_resource type="PackedScene" uid="uid://de0m4efhg3n52" path="res://Scenes/Tools/csg_ref.tscn" id="10_pi8do"]
-[ext_resource type="PackedScene" uid="uid://ddp62lqxgj3c2" path="res://Scenes/PlayerController/player.tscn" id="14_qv7ho"]
 [ext_resource type="PackedScene" uid="uid://bqekf67x42h0i" path="res://Models/Windmill/wind_mill.tscn" id="19_l7anu"]
 [ext_resource type="PackedScene" uid="uid://c3n5ryfjyi3h1" path="res://Models/TubeLight/tube_light.tscn" id="20_gox77"]
+[ext_resource type="PackedScene" uid="uid://bno01vmd57gq1" path="res://Scenes/PlayerController/controller.tscn" id="22_hnqyf"]
 
 [sub_resource type="Environment" id="Environment_2lvxy"]
 background_mode = 2
 background_energy_multiplier = 1.48
 sky = ExtResource("2_fb8vh")
-sky_rotation = Vector3(0, 0.0025981, 0)
+sky_rotation = Vector3(0, 0.423711, 0)
 ambient_light_source = 3
 reflected_light_source = 2
 tonemap_mode = 2
@@ -2261,9 +2261,6 @@ monitoring = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96046e-08, -0.75, -1.8746)
 shape = SubResource("BoxShape3D_qhwn0")
 
-[node name="Player" parent="." instance=ExtResource("14_qv7ho")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.7845, 13.3935, -79.263)
-
 [node name="WindMill" parent="." groups=["Metal"] instance=ExtResource("19_l7anu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7226, 32.0899, -139.402)
 
@@ -2277,6 +2274,8 @@ transform = Transform3D(-0.34202, 0, -0.939693, 0, 1, 0, 0.939693, 0, -0.34202, 
 
 [node name="TubeLight2" parent="." instance=ExtResource("20_gox77")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 34.2028, 5.63624, 10.752)
+
+[node name="Player" parent="." instance=ExtResource("22_hnqyf")]
 
 [editable path="Stage/Node3D10/TubeLight"]
 [editable path="Stage/Node3D10/TubeLight2"]

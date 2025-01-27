@@ -31,7 +31,7 @@ public partial class Idle : MovementState
             EmitSignal(SignalName.StateFinished, "Jump", new());
         }
 
-        if (Movement.GetInputDirection() != Vector2.Zero)
+        if (Movement.GetRawInputDirection() != Vector2.Zero)
             EmitSignal(SignalName.StateFinished, "Sprint", new());
 
 		if (!Movement.IsOnFloor())

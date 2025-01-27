@@ -10,6 +10,7 @@ public partial class Camera : Camera3D, ICamera
 	private Movement _movement;
 	
 	[Export] private Node3D _mesh;
+	[Export] private Node3D _headMesh;
 	
 	[Export] private Node3D _head;
 	[Export] private Node3D _neck;
@@ -91,13 +92,13 @@ public partial class Camera : Camera3D, ICamera
 		_currentAngle = Mathf.RadToDeg(GetSignedYAngleBetween(nodeA, nodeB));
 
 		// Debug arrow to visualize mesh direction
-    	DebugDraw3D.DrawArrow(_movement.Position, _movement.Position + (-nodeB.Basis.Z * 2f), Colors.Red, 0.2f);
+    	//DebugDraw3D.DrawArrow(_movement.Position, _movement.Position + (-nodeB.Basis.Z * 2f), Colors.Red, 0.2f);
 
 		Vector2 filteredInput = _movement.GetFilteredInputDirection();
 		Vector3 desiredDirection = nodeA.Transform.Basis * new Vector3(filteredInput.X, 0, filteredInput.Y).Normalized();
 
 		// Debug arrow to visualize filtered input direction
-		DebugDraw3D.DrawArrow(_movement.Position, _movement.Position + (desiredDirection * 4f), Colors.Blue, 0.2f);
+		//DebugDraw3D.DrawArrow(_movement.Position, _movement.Position + (desiredDirection * 4f), Colors.Blue, 0.2f);
 	}
 
 	/// <summary>
@@ -121,12 +122,30 @@ public partial class Camera : Camera3D, ICamera
 
 		// Rotate the X axis
 		_head.RotateObjectLocal(Vector3.Right, _rotationX);
+
+		_headMesh.Transform = GetLerpedTargetRotation(_headMesh.Transform, _head.GlobalTransform,
+												 1.0f - Mathf.Pow(0.5f, (float)GetProcessDeltaTime() * 15f));
 	}
 
 	/// <summary>
 	/// Method that rotates the body mesh to a filtered direction (forward, forward left, forward right) based on input
 	/// </summary>
-	public void RotateBodyMesh()
+	public void RotateBodyMeshDirection()
+	{
+		Node3D nodeA = _neck;
+		Node3D nodeB = _mesh;
+
+		Vector3 desiredDirection = _movement.GetPlayerDirection();
+
+		Transform3D target = GetLerpedTargetRotation(nodeB.Transform, desiredDirection,
+												 1.0f - Mathf.Pow(0.5f, (float)GetProcessDeltaTime() * 15f));
+		_mesh.Transform = target;
+	}
+
+	/// <summary>
+	/// Method that rotates the body mesh to a filtered direction (forward, forward left, forward right) based on input
+	/// </summary>
+	public void RotateBodyMeshInput()
 	{
 		Node3D nodeA = _neck;
 		Node3D nodeB = _mesh;
@@ -238,7 +257,7 @@ public partial class Camera : Camera3D, ICamera
 		Vector2 headBob;
 		Vector3 eyes = _eyes.Position;
 
-		if (_movement.GetInputDirection() != Vector2.Zero)
+		if (_movement.GetRawInputDirection() != Vector2.Zero)
 		{
 			headBob.Y = Mathf.Sin(_headBobIndex);
 			headBob.X = Mathf.Sin(_headBobIndex / 2) + 0.5f;
@@ -306,7 +325,7 @@ public partial class Camera : Camera3D, ICamera
 
 	public void FollowMeshToNeck()
 	{
-		float smoothSpeed = 15f;
+		float smoothSpeed = 5f;
 		
 		Node3D nodeA = _neck;
 		Node3D nodeB = _mesh;

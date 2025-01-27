@@ -18,15 +18,15 @@
 [ext_resource type="Texture2D" uid="uid://ca74vr1r8xb2" path="res://Textures/decals_0006_2k_3VUpnY/decals_0006_alpa_2k.png" id="16_ggkj8"]
 [ext_resource type="Texture2D" uid="uid://dd53cr7ij30yd" path="res://Textures/decals_0006_2k_3VUpnY/decals_0006_normal_opengl_2k.png" id="17_rwibq"]
 [ext_resource type="Texture2D" uid="uid://bopb2fir8dyh7" path="res://Textures/decals_0006_2k_3VUpnY/decal_channel_pack.png" id="18_mpyig"]
-[ext_resource type="PackedScene" uid="uid://ddp62lqxgj3c2" path="res://Scenes/PlayerController/player.tscn" id="19_5cs0m"]
 [ext_resource type="PackedScene" uid="uid://bqekf67x42h0i" path="res://Models/Windmill/wind_mill.tscn" id="20_aa7e7"]
+[ext_resource type="PackedScene" uid="uid://bno01vmd57gq1" path="res://Scenes/PlayerController/controller.tscn" id="20_nl743"]
 [ext_resource type="PackedScene" uid="uid://mknwr3411oi8" path="res://Scenes/env_2.tscn" id="21_1by16"]
 
 [sub_resource type="Environment" id="Environment_2lvxy"]
 background_mode = 2
 background_energy_multiplier = 1.48
 sky = ExtResource("1_scl8r")
-sky_rotation = Vector3(0, 0.0417423, 0)
+sky_rotation = Vector3(0, 0.0455005, 0)
 ambient_light_source = 3
 ambient_light_sky_contribution = 0.0
 reflected_light_source = 2
@@ -2109,9 +2109,6 @@ monitoring = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96046e-08, -0.75, -1.8746)
 shape = SubResource("BoxShape3D_qhwn0")
 
-[node name="Player" parent="." instance=ExtResource("19_5cs0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.1882, 72.278, -244.073)
-
 [node name="WindMill" parent="." groups=["Metal"] instance=ExtResource("20_aa7e7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7226, 32.0899, -139.402)
 
@@ -2120,6 +2117,8 @@ transform = Transform3D(-0.34202, 0, -0.939693, 0, 1, 0, 0.939693, 0, -0.34202, 
 
 [node name="WindMill3" parent="." groups=["Metal"] instance=ExtResource("20_aa7e7")]
 transform = Transform3D(-0.34202, 0, -0.939693, 0, 1, 0, 0.939693, 0, -0.34202, 46.0163, 5.8399, -20.1233)
+
+[node name="Player" parent="." instance=ExtResource("20_nl743")]
 
 [node name="TubeLight" parent="." instance=ExtResource("9_rnh8j")]
 

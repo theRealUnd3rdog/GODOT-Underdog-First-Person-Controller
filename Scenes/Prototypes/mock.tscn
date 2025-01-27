@@ -826,160 +826,125 @@ visible = false
 material_override = ExtResource("2_pxoou")
 use_collision = false
 size = Vector3(91, 19.25, 174.5)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="Room" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62499, 9.768, 36.375)
 
 [node name="CSGRef20" parent="Room" instance=ExtResource("1_y5gbt")]
 size = Vector3(3.5, 0.25, 19.5)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef34" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9.875)
 size = Vector3(3.5, 0.25, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef35" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(14.5, 1.75, 20)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef36" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.125, -40.125, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(8.75, 76.5, 11)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef32" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.125, 0, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.25, 0.25, 20)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef33" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.125, 0, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.25, 0.25, 20)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef30" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.49997, 0.25, 0)
 size = Vector3(5.5, 0.25, 19.5)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef31" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.50002, 0.25, 0)
 size = Vector3(5.5, 0.25, 19.5)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef24" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.875, 3.75, 9.875)
 material_override = ExtResource("2_pxoou")
 size = Vector3(6.25, 7.75, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="CSGRef25" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.875, 3.75, 9.875)
 material_override = ExtResource("2_pxoou")
 size = Vector3(6.25, 7.75, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="CSGRef26" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.125, 9.875)
 material_override = ExtResource("2_pxoou")
 size = Vector3(1.5, 5, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="CSGRef27" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.875, 3.75, -9.875)
 material_override = ExtResource("2_pxoou")
 size = Vector3(6.25, 7.75, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="CSGRef28" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.87501, 3.75, -9.875)
 material_override = ExtResource("2_pxoou")
 size = Vector3(6.25, 7.75, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="CSGRef29" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.58307e-06, 5.125, -9.875)
 material_override = ExtResource("2_pxoou")
 size = Vector3(1.5, 5, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="CSGRef23" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.75, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(14.5, 0.25, 20)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef21" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.125, 3.875, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.25, 7.5, 20)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="CSGRef22" parent="Room" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.12501, 3.875, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.25, 7.5, 20)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="TubeLight3" type="Node3D" parent="Room"]
 transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, 6.8929, 6.19062, -0.18502)
@@ -1061,272 +1026,216 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.625, 9.768, 21.5)
 [node name="CSGRef34" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.75, -1.625, 0)
 size = Vector3(17.5, 3.5, 9.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef56" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.75, -4.375, 0)
 material_override = ExtResource("2_pxoou")
 size = Vector3(9.5, 2, 9.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef57" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 5.87501, -2.625, 3.5)
 size = Vector3(3.75, 1.5, 2.75)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef60" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 5.87501, -3, 0.75)
 size = Vector3(3.75, 0.75, 2.75)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef61" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.62501, -3, 1.875)
 size = Vector3(3.75, 0.75, 5)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef59" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.87501, -1.375, 3.5)
 size = Vector3(1.75, 1, 2.75)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef49" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.53674e-07, 10.375, -31.875)
 size = Vector3(27, 8, 7)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef66" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.125, 10.375, -41.625)
 size = Vector3(4.75, 8, 12.5)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef51" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 11, 4.5, -18.875)
 size = Vector3(18.25, 1.25, 4.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef58" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 11, 6.125, -11.75)
 size = Vector3(4, 2, 4.75)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef62" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 11, 5.625, -15.75)
 size = Vector3(4, 1, 4.75)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef52" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -11.25, 4.5, -18.875)
 size = Vector3(18.25, 1.25, 4.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef55" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 7.10543e-15, 0, 1, 0, -7.10543e-15, 0, 1, 8.5, 8.75, 2.375)
 size = Vector3(10.25, 1.25, 4.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef63" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -11.25, 13.5, -0.625)
 size = Vector3(10.25, 1.25, 4.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef64" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -11.25, 16.375, -4.75)
 size = Vector3(2, 4.5, 4.75)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef65" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1.31798e-07, -7.5904e-09, 1, -0.173648, 0.984808, 3.03616e-08, -0.984808, -0.173648, 1.28478e-07, -11.375, 15.631, -17.7177)
 size = Vector3(24.5, 1.75, 4.5)
-_update = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef53" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -12.25, 2, -20.25)
 size = Vector3(15.5, 2.25, 2.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef54" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 12, 2, -20.25)
 size = Vector3(15.5, 2.25, 2.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef35" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.53674e-07, -4.375, -20.25)
 material_override = ExtResource("2_pxoou")
 size = Vector3(27, 2, 30.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef41" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.53674e-07, -4.375, -42)
 material_override = ExtResource("2_pxoou")
 size = Vector3(50, 2, 12.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef36" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.875, 11.75, -15.5)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 34.25, 40.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef37" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.875, 11.625, -15.5)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 34, 40.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef38" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.75, 11.75, 5)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 34.25, 7)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef39" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -10.75, 11.75, 5)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 34.25, 7)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef40" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.33514e-05, 18.375, 5)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 21, 14.5)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef43" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 9.53674e-06, 22.75, -48)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 52.25, 50)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef47" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -24.5, 22.75, -42)
 material_override = ExtResource("2_pxoou")
 size = Vector3(11.25, 52.25, 1)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef48" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 24.5, 22.75, -42)
 material_override = ExtResource("2_pxoou")
 size = Vector3(11.25, 52.25, 1)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef44" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.625, 22.75, -36)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 52.25, 10.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef45" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -19.625, 22.75, -36)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 52.25, 10.75)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef46" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.33514e-05, 38.375, -36)
 material_override = ExtResource("2_pxoou")
 size = Vector3(0.75, 21, 28.5)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef42" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.86102e-05, 28.375, -15.5)
 material_override = ExtResource("2_pxoou")
 size = Vector3(40.25, 1, 27)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef50" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(-0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, -0.5, -11.0999, 3.75, 0.324562)
 material_override = ExtResource("2_pxoou")
 size = Vector3(11.25, 7.75, 0.25)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 125
 _refFontOffset = 1.0
-_measurementFontSize = 125
 
 [node name="SpatialAudioPlayer" parent="Hall" instance=ExtResource("5_hhtee")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.53674e-07, 0, -17.25)
@@ -2002,19 +1911,15 @@ spot_angle = 62.9538
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12501, -41.75, -13.125)
 material_override = ExtResource("2_pxoou")
 size = Vector3(8.75, 75.75, 11)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="CSGRef68" parent="Hall" instance=ExtResource("1_y5gbt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.125007, -41.75, -40.125)
 material_override = ExtResource("2_pxoou")
 size = Vector3(8.75, 75.75, 11)
-_update = false
-_showMeasurementText = false
+MeasurementFontSize = 300
 _refFontOffset = 1.0
-_measurementFontSize = 300
 
 [node name="Label3D2" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.59199, 15.125, 47.115)

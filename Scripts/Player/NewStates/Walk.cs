@@ -5,6 +5,7 @@ using System;
 public partial class Walk : MovementState
 {
     [Export] private float _walkingSpeed;
+    [Export] private float _walkAccelerationTime = 0.5f;
     [Export] private float _headBobSpeed = 14.0f;
     [Export] private float _headBobIntensity = 0.1f; //in centimetres
 
@@ -13,7 +14,6 @@ public partial class Walk : MovementState
         base.Enter();
 
         Camera.StartStanding();
-        Movement.SetDesiredSpeed(_walkingSpeed);
     }
 
     public override void Update(double delta)
@@ -24,7 +24,7 @@ public partial class Walk : MovementState
 
     public override void PhysicsUpdate(double delta)
     {
-        Movement.Accelerate((float)delta, _walkingSpeed);
+        Movement.Accelerate((float)delta, _walkingSpeed, _walkAccelerationTime);
 
         if (Movement.IsOnFloor() && Input.IsActionPressed("crouch"))
         {
@@ -42,7 +42,7 @@ public partial class Walk : MovementState
         }
 
         // Threshold velocity before it reaches idle
-        if (Movement.GetInputDirection() == Vector2.Zero)
+        if (Movement.GetRawInputDirection() == Vector2.Zero)
             EmitSignal(SignalName.StateFinished, "Idle", new());
         
         if (!Movement.IsOnFloor())

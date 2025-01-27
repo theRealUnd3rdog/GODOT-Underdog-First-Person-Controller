@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bno01vmd57gq1"]
+[gd_scene load_steps=26 format=3 uid="uid://bno01vmd57gq1"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Movement.cs" id="1_lmf3s"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/GodotParadiseFiniteStateMachine.cs" id="1_mxrkb"]
@@ -12,6 +12,8 @@
 [ext_resource type="Script" path="res://Scripts/Player/NewStates/Decceleration.cs" id="7_1uwqo"]
 [ext_resource type="Script" path="res://Scripts/Player/NewStates/Jump.cs" id="7_enr4c"]
 [ext_resource type="Script" path="res://Scripts/Player/Camera.cs" id="9_bae87"]
+[ext_resource type="Script" path="res://Scripts/Player/Audio/Audio.cs" id="9_jo3el"]
+[ext_resource type="AudioStream" uid="uid://cyp44pfj8sft5" path="res://Sounds/Footsteps/Step_Rustle_01.wav" id="14_yowbf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yih85"]
 custom_solver_bias = 0.1
@@ -24,12 +26,12 @@ height = 1.2
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_q80lt"]
 
+[sub_resource type="BoxMesh" id="BoxMesh_prxsd"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bhevj"]
 cull_mode = 2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_02y88"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_prxsd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dct41"]
 size = Vector3(0.25, 1.005, 0.25)
@@ -43,6 +45,52 @@ font = SubResource("SystemFont_36c0q")
 font_size = 45
 outline_color = Color(0, 0, 0, 1)
 
+[sub_resource type="Animation" id="Animation_utl6c"]
+resource_name = "sprint"
+length = 0.7
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../../../Audio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 0.433333),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [NodePath("../FSM/Sprint/step"), ExtResource("14_yowbf")],
+"method": &"PlayAnyAudio"
+}, {
+"args": [NodePath("../FSM/Sprint/step"), ExtResource("14_yowbf")],
+"method": &"PlayAnyAudio"
+}]
+}
+tracks/1/type = "audio"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("../../../../FSM/Sprint/step")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": [{
+"end_offset": 0.137562,
+"start_offset": 0.0,
+"stream": ExtResource("14_yowbf")
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("14_yowbf")
+}],
+"times": PackedFloat32Array(0.1, 0.433333)
+}
+tracks/1/use_blend = true
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wvq6r"]
+_data = {
+"sprint": SubResource("Animation_utl6c")
+}
+
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_resetPosition", "_speedLabel", "_momentumLabel", "_stateLabel", "_animationLabel", "_desiredSpeedLabel", "_previousStateLabel")]
 collision_mask = 15
 floor_max_angle = 1.13446
@@ -50,8 +98,6 @@ floor_snap_length = 0.3
 script = ExtResource("1_lmf3s")
 _resetPosition = NodePath("ResetPos")
 maxSpeed = 13.0
-accelerationTime = 2.0
-decelerationTime = 0.1
 _physicsInterpolate = true
 _speedLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Velocity")
 _momentumLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Momentum")
@@ -69,6 +115,9 @@ script = ExtResource("2_ksvsq")
 
 [node name="Air" type="Node" parent="FSM"]
 script = ExtResource("3_lo0x0")
+_airSpeed = 15.0
+_airChangeFactor = 0.1
+_airDirChangeTime = 2.0
 _gravityMultiplier = 1.5
 
 [node name="Walk" type="Node" parent="FSM"]
@@ -78,9 +127,15 @@ _walkingSpeed = 5.0
 [node name="Sprint" type="Node" parent="FSM"]
 script = ExtResource("5_iut7l")
 _sprintingSpeed = 9.0
+_sprintAccelerationTime = 1.3
+
+[node name="step" type="AudioStreamPlayer3D" parent="FSM/Sprint"]
+volume_db = 18.203
+bus = &"Movement"
 
 [node name="Decceleration" type="Node" parent="FSM"]
 script = ExtResource("7_1uwqo")
+_deccelerationTime = 0.3
 
 [node name="Jump" type="Node" parent="FSM"]
 script = ExtResource("7_enr4c")
@@ -95,6 +150,9 @@ shape = SubResource("CapsuleShape3D_yih85")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("CapsuleShape3D_45p4n")
 disabled = true
+
+[node name="Audio" type="Node3D" parent="."]
+script = ExtResource("9_jo3el")
 
 [node name="CeilingRay" type="RayCast3D" parent="."]
 target_position = Vector3(0, 2, 0)
@@ -117,14 +175,15 @@ script = ExtResource("2_t5to1")
 
 [node name="CamFollow" type="Node3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker"]
 script = ExtResource("3_atyu3")
-_smoothSpeed = 50.0
+_smoothSpeed = 30.0
 
-[node name="Camera3D" type="Camera3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker/CamFollow" node_paths=PackedStringArray("_mesh", "_head", "_neck", "_eyes")]
+[node name="Camera3D" type="Camera3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker/CamFollow" node_paths=PackedStringArray("_mesh", "_headMesh", "_head", "_neck", "_eyes")]
 unique_name_in_owner = true
 current = true
 fov = 90.0
 script = ExtResource("9_bae87")
 _mesh = NodePath("../../../../../../../CapsuleMesh")
+_headMesh = NodePath("../../../../../../../HeadMesh")
 _head = NodePath("../../../../..")
 _neck = NodePath("../../../../../..")
 _eyes = NodePath("../../../..")
@@ -136,6 +195,14 @@ current = true
 [node name="ShakeCollider" type="CollisionShape3D" parent="Body/Neck/Head/Eyes/CamHead/CameraShaker"]
 shape = SubResource("SphereShape3D_q80lt")
 
+[node name="HeadMesh" type="Node3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59464, 0)
+
+[node name="Head" type="CSGMesh3D" parent="Body/HeadMesh"]
+transform = Transform3D(0.309844, 0, 0, 0, 0.215405, 0, 0, 0, 0.54633, 0, 0.0990566, -0.372586)
+cast_shadow = 3
+mesh = SubResource("BoxMesh_prxsd")
+
 [node name="CapsuleMesh" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 1, 0)
 material_override = SubResource("StandardMaterial3D_bhevj")
@@ -143,10 +210,16 @@ cast_shadow = 3
 mesh = SubResource("CapsuleMesh_02y88")
 skeleton = NodePath("../..")
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="Body/CapsuleMesh"]
-transform = Transform3D(0.619689, 0, 0, 0, 0.215405, 0, 0, 0, 1.09266, 0, 0.693696, -0.745172)
-cast_shadow = 3
-mesh = SubResource("BoxMesh_prxsd")
+[node name="Hands" type="Node3D" parent="Body/CapsuleMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.427747, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Body/CapsuleMesh/Hands"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0109863, 0.00358582, -0.0769043)
+size = Vector3(0.158691, 0.0929871, 1.15381)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Body/CapsuleMesh/Hands"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0297241, 0.00499344, -0.615091)
+size = Vector3(0.452759, 0.104851, 0.11316)
 
 [node name="CollisionChecker" type="Area3D" parent="."]
 collision_mask = 30
@@ -229,6 +302,12 @@ uppercase = true
 
 [node name="ResetPos" type="Node3D" parent="."]
 top_level = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Body/Neck/Head/Eyes")
+libraries = {
+"": SubResource("AnimationLibrary_wvq6r")
+}
 
 [connection signal="area_entered" from="CollisionChecker" to="." method="OnCollisionCheckerAreaEntered"]
 [connection signal="area_exited" from="CollisionChecker" to="." method="OnCollisionCheckerAreaExited"]

@@ -12,6 +12,7 @@ public partial class Jump : MovementState
     public override void Awake()
     {
         base.Enter();
+
         float gravity = (-2 * _jumpHeight) / Mathf.Pow(_timeToPeak, 2);
         Movement.gravity = -gravity;
 

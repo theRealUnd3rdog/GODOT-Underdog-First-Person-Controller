@@ -7,6 +7,7 @@ public partial class Movement : CharacterBody3D, IMovement
 {
 	// Finite state machine
 	public GodotParadiseFiniteStateMachine FSM;
+	public AnimationPlayer AnimationPlayer;
 
 	// grabbables
 	private Node3D _body;
@@ -18,12 +19,12 @@ public partial class Movement : CharacterBody3D, IMovement
 
 	// current speeds
 	private float _currentSpeed;
-	private float _desiredSpeed;
 	private float _momentum;
 
 	// directions
-	private Vector3 _playerDirection;
-	private Vector3 _stableDirection = Vector3.Zero;
+	private Vector3 _playerDirection; // Final direction calculated from stable direction
+	private Vector3 _stableDirection; // Direction that is absolute after no input has been given
+	private Vector3 _previousDirection; // Previous direction from the last frame
 
 	// velocities
 	private Vector3 _localVelocity;
@@ -37,18 +38,23 @@ public partial class Movement : CharacterBody3D, IMovement
 
 	[ExportCategory("Movement")]
 	[Export] public float maxSpeed {private set; get;} // metres per second
-
-	[Export] public float accelerationTime {private set; get;} = 0.1f; // in seconds
 	private float _accelerationRate;
-
-	[Export] public float decelerationTime {private set; get;} = 0.5f; // in seconds
 	private float _decelerationRate;
 
 	// Value that is used to determine how long it takes to change the player direction
-	[Export] public float directionChangeTime {private set; get;} = 0.3f; // in seconds
+	private float _dirChangeTime = 0.3f;
+	private Vector3 _delayedDirection; // Direction where the vector is scaled according to the change in direction time
+	private float _directionBlendFactor = 0.0f;
+
+	private float _directionControl = 1f;
 
 	// Value that by default is set to default gravity but can be changed.
 	public float gravity {set; get;} = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
+	[ExportCategory("Input")]
+	[Export(PropertyHint.Range, "0.01, 10,")] private float _inputReponseTime;
+	private float _currentInputFactor;
+	private Vector2 _currentInput = Vector2.Zero;
 
 	[ExportSubgroup("Interpolation")]
 	[Export] private bool _physicsInterpolate;
@@ -67,15 +73,13 @@ public partial class Movement : CharacterBody3D, IMovement
 	{
 		// Get Finite state machine
 		FSM = GetNode<GodotParadiseFiniteStateMachine>("FSM");
+		AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 
 		// Grab all node references
 		_body = GetNode<Node3D>("Body");
 		_neck = GetNode<Node3D>("Body/Neck");
 
 		_collider = GetNode<CollisionShape3D>("Standing_collision_shape");
-
-		// Set a default desiredSpeed in the beginning (value will change on other states automatically)
-		_desiredSpeed = 5f;
 	}
 
 	public override void _Process(double delta)
@@ -88,33 +92,21 @@ public partial class Movement : CharacterBody3D, IMovement
 		if (Input.IsKeyPressed(Key.R) && _resetPosition != null)
 			GlobalPosition = _resetPosition.GlobalPosition;
 
+		_currentInput = GetSmoothInputDirection();
+
 		HandleLabels();
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 inputDir = GetInputDirection();
 		_localVelocity = Velocity;
 
-		// Compute the desired direction based on input
-		Vector3 desiredDirection = _neck.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
+		ChangeDirectionWithInput();
+		ApplyDelayedDirection();
 
-		// Check if the input direction is stable (not changing significantly)
-		if (inputDir != Vector2.Zero)
-		{
-			// Update the stable direction only when input is stable
-			_stableDirection = desiredDirection;
-		}
-
-		// Smoothly transition towards the stable direction
-		_playerDirection = _playerDirection.Lerp(
-			_stableDirection,
-			1.0f - Mathf.Exp(-(float)delta / directionChangeTime)
-		);
-
-		GD.Print(_playerDirection.Length());
-
-		// Weight (0,1) that will control how much the velocity should go down to 0 when decellerating
+		DebugDraw3D.DrawArrow(Position, Position + (_playerDirection * 2f), Colors.Red, 0.2f);
+		DebugDraw3D.DrawArrow(Position, Position + (_delayedDirection * 1f), Colors.Blue, 0.2f);
+		
 		_localVelocity.X = _playerDirection.X * _currentSpeed;
 		_localVelocity.Z = _playerDirection.Z * _currentSpeed;
 
@@ -168,43 +160,30 @@ public partial class Movement : CharacterBody3D, IMovement
 	}
 
 	/// <summary>
-	/// Sets the desired speed of the controller, value that should only change on 1 call
+	/// Acceleration Method
 	/// </summary>
-	public void SetDesiredSpeed(float desiredSpeed)
+	public void Accelerate(float delta, float desiredSpeed, float accelerationTime)
 	{
-		_desiredSpeed = desiredSpeed;
+		desiredSpeed *= GetDelayedDirection().Length();
+		
+		_accelerationRate = desiredSpeed / accelerationTime;
+		_currentSpeed += _accelerationRate * delta;
+
+		// Clamp to ensure we don't overshoot the desired speed
+		_currentSpeed = Mathf.Clamp(_currentSpeed, 0, desiredSpeed);
 	}
-
+	
 	/// <summary>
-	/// Update the current speed to it's accel/decel times.
+	/// Decceleration method
 	/// </summary>
-	public void Accelerate(float delta, float desiredSpeed)
+	public void Deccelerate(float delta, float desiredSpeed, float decelerationTime)
 	{
-		if (_currentSpeed < desiredSpeed)
-		{
-			// Acceleration logic
-			_accelerationRate = (desiredSpeed - _currentSpeed) / accelerationTime;
-			_currentSpeed += _accelerationRate * delta;
+		// Deceleration logic
+		_decelerationRate = desiredSpeed / decelerationTime;
+		_currentSpeed -= _decelerationRate * delta;
 
-			// Clamp to ensure we don't overshoot the desired speed
-			_currentSpeed = Mathf.Clamp(_currentSpeed, 0, desiredSpeed);
-		}
-	}
-
-	/// <summary>
-	/// Update the current speed to it's accel/decel times.
-	/// </summary>
-	public void Deccelerate(float delta, float desiredSpeed)
-	{
-		if (_currentSpeed > desiredSpeed)
-		{
-			// Deceleration logic
-			_decelerationRate = (_currentSpeed - desiredSpeed) / decelerationTime;
-			_currentSpeed -= _decelerationRate * delta;
-
-			// Clamp to ensure we don't go below the desired speed
-			_currentSpeed = Mathf.Clamp(_currentSpeed, desiredSpeed, _currentSpeed);
-		}
+		// Clamp to ensure we don't go below the desired speed
+		_currentSpeed = Mathf.Clamp(_currentSpeed, 0f, 100f);
 	}
 
 	public void SetCurrentSpeed(float speed)
@@ -217,9 +196,37 @@ public partial class Movement : CharacterBody3D, IMovement
 		return _currentSpeed;
 	}
 
-	public Vector2 GetInputDirection()
+	public Vector2 GetRawInputDirection()
 	{
 		return Input.GetVector("left", "right", "forward", "backward");
+	}
+
+	private Vector2 GetSmoothInputDirection()
+	{
+		Vector2 rawInput = GetRawInputDirection();
+		Vector2 lerpedInput = Vector2.Zero;
+
+		// Check if input vector is zero
+		if (rawInput == Vector2.Zero)
+		{
+			// Reset responseTime
+			_currentInputFactor = 0f;
+		}
+		else
+		{
+			// Calculate the lerp factor based on response time
+			_currentInputFactor = Mathf.Min(_currentInputFactor + (float)GetProcessDeltaTime() / _inputReponseTime, 1.0f);
+		}
+
+		// Smoothly interpolate _currentInput towards rawInput
+		lerpedInput = lerpedInput.Lerp(rawInput, _currentInputFactor);
+
+		return lerpedInput;
+	}
+
+	public Vector2 GetCurrentSmoothInput()
+	{
+		return _currentInput;
 	}
 
 	/// <summary>
@@ -263,12 +270,35 @@ public partial class Movement : CharacterBody3D, IMovement
 		return Vector2.Up;
 	}
 
-	/// <summary>
-	/// Method to get the un-lerped player direction
-	/// </summary>
-	public Vector3 GetStableDirection()
+	private void ChangeDirectionWithInput()
 	{
-		return _stableDirection;
+		Vector2 inputDir = GetRawInputDirection();
+
+		// Compute the desired direction based on input
+		Vector3 desiredDirection = _neck.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
+
+		// If input direction is equivalent to zero, keep the direction as is
+		if (inputDir != Vector2.Zero)
+		{
+			_stableDirection = desiredDirection;
+		}
+
+		_playerDirection = _playerDirection.Lerp(_stableDirection, _directionControl);
+	}
+
+	private void ApplyDelayedDirection()
+	{
+		// If the direction changes, reset the blend value
+        if (_previousDirection != _stableDirection)
+        {
+            _directionBlendFactor = 0.0f;
+            _previousDirection = _stableDirection;
+        }
+		
+		_directionBlendFactor = Mathf.Min(_directionBlendFactor + (float)GetPhysicsProcessDeltaTime() / _dirChangeTime, 1.0f);
+		
+        // Smoothly transition towards the player direction
+        _delayedDirection = _delayedDirection.Lerp(_stableDirection, _directionBlendFactor);
 	}
 
 	/// <summary>
@@ -287,13 +317,38 @@ public partial class Movement : CharacterBody3D, IMovement
 		_playerDirection = direction;
 	}
 
+	public Vector3 GetDelayedDirection()
+	{
+		return _delayedDirection;
+	}
+
+	public Vector2 GetXZVelocity()
+	{
+		return new Vector2(Velocity.X, Velocity.Z);
+	}
+
+	public float GetCurrentDirChangeTime()
+	{
+		return _dirChangeTime;
+	}
+
+	public void SetDirectionChangeTime(float time)
+	{
+		_dirChangeTime = time;
+	}
+
+	public void SetDirectionControl(float value)
+	{
+		_directionControl = value;
+	}
+
 	/// <summary>
 	/// Method to check if player is mainly facing forward by input
 	/// </summary>
 	/// <param name="angle">Angle in degrees that determines how much is needed to consider it forward</param>
 	public bool IsPlayerMainlyForward(float angle)
 	{
-		Vector2 inputDir = GetInputDirection();
+		Vector2 inputDir = GetRawInputDirection();
         Vector3 inputDirVec3 = new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
 
         // Check if input is mainly forward (within 45 degrees of forward axis)
@@ -311,4 +366,11 @@ public partial class Movement : CharacterBody3D, IMovement
 	{
 		_collider.Disabled = !state;
 	}
+
+	public static float CalculateT(float v, float k)
+    {
+        float t = v / k;  
+        t = Math.Min(t, 1);
+        return t;
+    }
 }

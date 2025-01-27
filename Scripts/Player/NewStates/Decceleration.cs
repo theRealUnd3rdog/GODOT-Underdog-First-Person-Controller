@@ -4,9 +4,13 @@ using System;
 [GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
 public partial class Decceleration : MovementState
 {
+    private float _previousSpeed;
+    [Export] private float _deccelerationTime = 0.5f;
+
     public override void Enter()
     {
         base.Enter();
+        _previousSpeed = Movement.GetCurrentSpeed();
     }
 
     public override void Update(double delta)
@@ -16,7 +20,7 @@ public partial class Decceleration : MovementState
 
     public override void PhysicsUpdate(double delta)
     {
-        Movement.Deccelerate((float)delta, 0f);
+        Movement.Deccelerate((float)delta, _previousSpeed, _deccelerationTime);
 
         // Threshold velocity before it reaches idle
         if (Mathf.Round(Movement.GetCurrentSpeed()) <= 0f)
@@ -35,7 +39,7 @@ public partial class Decceleration : MovementState
             EmitSignal(SignalName.StateFinished, "Jump", new());
         }
 
-        if (Movement.GetInputDirection() != Vector2.Zero)
+        if (Movement.GetRawInputDirection() != Vector2.Zero)
             EmitSignal(SignalName.StateFinished, "Sprint", new());
     }
 }

@@ -57,6 +57,7 @@ chromaticAbberation = NodePath("Chromatic_Abberation/CA")
 radialBlur = NodePath("Radial_Blur/RadialBlur")
 
 [node name="LensFlare" type="CanvasLayer" parent="PostProcessingManager"]
+visible = false
 
 [node name="LensFlare" type="ColorRect" parent="PostProcessingManager/LensFlare"]
 material = SubResource("ShaderMaterial_l1ov6")
@@ -72,6 +73,7 @@ script = ExtResource("4_eh1n0")
 
 [node name="Vignette" type="CanvasLayer" parent="PostProcessingManager"]
 layer = 0
+visible = false
 
 [node name="Vignette" type="ColorRect" parent="PostProcessingManager/Vignette"]
 material = SubResource("ShaderMaterial_c3222")
@@ -86,6 +88,7 @@ vOpacity = 0.1
 vColor = Color(0, 0, 0, 1)
 
 [node name="Lens_Distortion" type="CanvasLayer" parent="PostProcessingManager"]
+visible = false
 
 [node name="LensDistortion" type="ColorRect" parent="PostProcessingManager/Lens_Distortion"]
 material = SubResource("ShaderMaterial_x8p74")
@@ -98,6 +101,7 @@ script = ExtResource("7_krdyq")
 zoom = 25.0
 
 [node name="Chromatic_Abberation" type="CanvasLayer" parent="PostProcessingManager"]
+visible = false
 
 [node name="CA" type="ColorRect" parent="PostProcessingManager/Chromatic_Abberation"]
 material = SubResource("ShaderMaterial_qnhql")
@@ -109,6 +113,7 @@ grow_vertical = 2
 script = ExtResource("10_h1jgi")
 
 [node name="Radial_Blur" type="CanvasLayer" parent="PostProcessingManager"]
+visible = false
 
 [node name="RadialBlur" type="ColorRect" parent="PostProcessingManager/Radial_Blur"]
 material = SubResource("ShaderMaterial_l06ac")
