@@ -15,5 +15,8 @@ public partial class MovementState : GodotParadiseState
         {
             GD.PrintErr("Player Movement script does not exist on owner node");
         }
+
+        AnimationNodeStateMachinePlayback node = (AnimationNodeStateMachinePlayback)Movement.AnimationPlayer.Get("parameters/Master/playback");
+		GD.Print(node.GetCurrentNode());
     }
 }

@@ -11,11 +11,18 @@ public partial class Decceleration : MovementState
     {
         base.Enter();
         _previousSpeed = Movement.GetCurrentSpeed();
+
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/moving", true);
     }
 
     public override void Update(double delta)
     {
         Camera.FollowMeshToNeck();
+    }
+
+    public override void Exit()
+    {
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/moving", false);
     }
 
     public override void PhysicsUpdate(double delta)
@@ -27,6 +34,8 @@ public partial class Decceleration : MovementState
         {
             Movement.SetCurrentSpeed(0f);
             EmitSignal(SignalName.StateFinished, "Idle", new());
+            
+            Movement.AnimationPlayer.Set("parameters/Master/conditions/idle", true);
         }
 
         if (!Movement.IsOnFloor())

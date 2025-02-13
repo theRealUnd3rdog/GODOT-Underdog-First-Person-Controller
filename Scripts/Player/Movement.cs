@@ -7,7 +7,7 @@ public partial class Movement : CharacterBody3D, IMovement
 {
 	// Finite state machine
 	public GodotParadiseFiniteStateMachine FSM;
-	public AnimationPlayer AnimationPlayer;
+	[Export] public AnimationTree AnimationPlayer;
 
 	// grabbables
 	private Node3D _body;
@@ -15,7 +15,6 @@ public partial class Movement : CharacterBody3D, IMovement
 
 	// references
 	private CollisionShape3D _collider;
-	private AnimationTree _animationTree;
 
 	// current speeds
 	private float _currentSpeed;
@@ -67,13 +66,11 @@ public partial class Movement : CharacterBody3D, IMovement
 	[Export] private Label _animationLabel;
 	[Export] private Label _desiredSpeedLabel;
 	[Export] private Label _previousStateLabel;
-	
 
 	public override void _Ready()
 	{
 		// Get Finite state machine
 		FSM = GetNode<GodotParadiseFiniteStateMachine>("FSM");
-		AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 
 		// Grab all node references
 		_body = GetNode<Node3D>("Body");
@@ -141,6 +138,9 @@ public partial class Movement : CharacterBody3D, IMovement
 		_stateLabel.Text = $"STATE: {FSM.CurrentState.Name}";
 		_desiredSpeedLabel.Text = $"DESIRED SPEED: {Mathf.Round(_currentSpeed)}";
 		_previousStateLabel.Text = $"PREVIOUS STATE: {FSM.PreviousState.Name}";
+
+		AnimationNodeStateMachinePlayback node = (AnimationNodeStateMachinePlayback)AnimationPlayer.Get("parameters/Master/playback");
+		_animationLabel.Text = "ANIMATION: " + node.GetCurrentNode();
 	}
 
 	public void SetLocalVelocity(Vector3 vel)

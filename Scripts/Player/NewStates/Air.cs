@@ -23,11 +23,13 @@ public partial class Air : MovementState
         Camera.StartStanding();
         Movement.SetDirectionChangeTime(_airDirChangeTime);
         Movement.SetDirectionControl(_airControl);
+
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/air", true);
     }
 
     public override void Exit()
     {
-        
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/air", false);
     }
 
     public override void Update(double delta)

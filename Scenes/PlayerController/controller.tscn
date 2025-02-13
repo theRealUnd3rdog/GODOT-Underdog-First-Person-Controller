@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bno01vmd57gq1"]
+[gd_scene load_steps=55 format=3 uid="uid://bno01vmd57gq1"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Movement.cs" id="1_lmf3s"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/GodotParadiseFiniteStateMachine.cs" id="1_mxrkb"]
@@ -45,6 +45,20 @@ font = SubResource("SystemFont_36c0q")
 font_size = 45
 outline_color = Color(0, 0, 0, 1)
 
+[sub_resource type="Animation" id="Animation_uoyx4"]
+resource_name = "air"
+loop_mode = 1
+
+[sub_resource type="Animation" id="Animation_bff5o"]
+resource_name = "idle"
+loop_mode = 1
+
+[sub_resource type="Animation" id="Animation_wrlwg"]
+resource_name = "jump"
+
+[sub_resource type="Animation" id="Animation_kg3jd"]
+resource_name = "land"
+
 [sub_resource type="Animation" id="Animation_utl6c"]
 resource_name = "sprint"
 length = 0.7
@@ -68,7 +82,7 @@ tracks/0/keys = {
 }
 tracks/1/type = "audio"
 tracks/1/imported = false
-tracks/1/enabled = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("../../../../FSM/Sprint/step")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
@@ -88,14 +102,132 @@ tracks/1/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_wvq6r"]
 _data = {
+"air": SubResource("Animation_uoyx4"),
+"idle": SubResource("Animation_bff5o"),
+"jump": SubResource("Animation_wrlwg"),
+"land": SubResource("Animation_kg3jd"),
 "sprint": SubResource("Animation_utl6c")
 }
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_resetPosition", "_speedLabel", "_momentumLabel", "_stateLabel", "_animationLabel", "_desiredSpeedLabel", "_previousStateLabel")]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_55b6l"]
+animation = &"air"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_i4tf3"]
+animation = &"land"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_x3x8o"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cjuur"]
+advance_mode = 2
+advance_condition = &"land"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wgmnn"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_yv6xa"]
+states/air/node = SubResource("AnimationNodeAnimation_55b6l")
+states/air/position = Vector2(435, 93)
+states/land/node = SubResource("AnimationNodeAnimation_i4tf3")
+states/land/position = Vector2(625, 93)
+transitions = ["Start", "air", SubResource("AnimationNodeStateMachineTransition_x3x8o"), "air", "land", SubResource("AnimationNodeStateMachineTransition_cjuur"), "land", "End", SubResource("AnimationNodeStateMachineTransition_wgmnn")]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_th0kb"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pn4oq"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_p7j25"]
+states/idle/node = SubResource("AnimationNodeAnimation_th0kb")
+states/idle/position = Vector2(543, 100)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_pn4oq")]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rqcsh"]
+animation = &"sprint"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2kawr"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_x7rb4"]
+states/Start/position = Vector2(221, 100)
+states/sprint/node = SubResource("AnimationNodeAnimation_rqcsh")
+states/sprint/position = Vector2(644, 100)
+transitions = ["Start", "sprint", SubResource("AnimationNodeStateMachineTransition_2kawr")]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_nvofs"]
+animation = &"jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r7w3l"]
+advance_mode = 2
+advance_condition = &"air"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uqpcw"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8r4f7"]
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4htkq"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1urjx"]
+priority = 2
+advance_mode = 2
+advance_condition = &"air"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qjluj"]
+priority = 2
+advance_mode = 2
+advance_condition = &"air"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8u7a7"]
+advance_mode = 2
+advance_condition = &"jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5hx3t"]
+advance_mode = 2
+advance_condition = &"jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ys41h"]
+advance_mode = 2
+advance_condition = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_221am"]
+priority = 2
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_p6mgb"]
+states/AirCycle/node = SubResource("AnimationNodeStateMachine_yv6xa")
+states/AirCycle/position = Vector2(310, 72)
+states/Idle/node = SubResource("AnimationNodeStateMachine_p7j25")
+states/Idle/position = Vector2(310, -35)
+states/Move/node = SubResource("AnimationNodeStateMachine_x7rb4")
+states/Move/position = Vector2(570, -35)
+states/Start/position = Vector2(-185, -35)
+states/jump/node = SubResource("AnimationNodeAnimation_nvofs")
+states/jump/position = Vector2(134, -124)
+transitions = ["jump", "AirCycle", SubResource("AnimationNodeStateMachineTransition_r7w3l"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_uqpcw"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_8r4f7"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_4htkq"), "Idle", "AirCycle", SubResource("AnimationNodeStateMachineTransition_1urjx"), "Move", "AirCycle", SubResource("AnimationNodeStateMachineTransition_qjluj"), "Move", "jump", SubResource("AnimationNodeStateMachineTransition_8u7a7"), "Idle", "jump", SubResource("AnimationNodeStateMachineTransition_5hx3t"), "AirCycle", "Idle", SubResource("AnimationNodeStateMachineTransition_ys41h"), "AirCycle", "Move", SubResource("AnimationNodeStateMachineTransition_221am")]
+graph_offset = Vector2(-445, -160)
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_nqfrr"]
+graph_offset = Vector2(-560, 59)
+nodes/Master/node = SubResource("AnimationNodeStateMachine_p6mgb")
+nodes/Master/position = Vector2(-220, 120)
+nodes/output/position = Vector2(320, 220)
+node_connections = [&"output", 0, &"Master"]
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("AnimationPlayer", "_resetPosition", "_speedLabel", "_momentumLabel", "_stateLabel", "_animationLabel", "_desiredSpeedLabel", "_previousStateLabel")]
 collision_mask = 15
 floor_max_angle = 1.13446
 floor_snap_length = 0.3
 script = ExtResource("1_lmf3s")
+AnimationPlayer = NodePath("AnimationTree")
 _resetPosition = NodePath("ResetPos")
 maxSpeed = 13.0
 _physicsInterpolate = true
@@ -108,7 +240,7 @@ _previousStateLabel = NodePath("MovementInfo/CanvasGroup/CanvasLayer/Previous St
 
 [node name="FSM" type="Node" parent="." node_paths=PackedStringArray("CurrentState")]
 script = ExtResource("1_mxrkb")
-CurrentState = NodePath("Idle")
+CurrentState = NodePath("Walk")
 
 [node name="Idle" type="Node" parent="FSM"]
 script = ExtResource("2_ksvsq")
@@ -308,6 +440,16 @@ root_node = NodePath("../Body/Neck/Head/Eyes")
 libraries = {
 "": SubResource("AnimationLibrary_wvq6r")
 }
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath("../Body/Neck/Head/Eyes")
+tree_root = SubResource("AnimationNodeBlendTree_nqfrr")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Master/conditions/air = false
+parameters/Master/conditions/idle = false
+parameters/Master/conditions/jump = false
+parameters/Master/conditions/moving = false
+parameters/Master/AirCycle/conditions/land = false
 
 [connection signal="area_entered" from="CollisionChecker" to="." method="OnCollisionCheckerAreaEntered"]
 [connection signal="area_exited" from="CollisionChecker" to="." method="OnCollisionCheckerAreaExited"]

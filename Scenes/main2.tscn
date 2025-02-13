@@ -26,7 +26,7 @@
 background_mode = 2
 background_energy_multiplier = 1.48
 sky = ExtResource("1_scl8r")
-sky_rotation = Vector3(0, 0.0455005, 0)
+sky_rotation = Vector3(0, 0.000436332, 0)
 ambient_light_source = 3
 ambient_light_sky_contribution = 0.0
 reflected_light_source = 2

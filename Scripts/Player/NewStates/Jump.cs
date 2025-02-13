@@ -25,13 +25,18 @@ public partial class Jump : MovementState
 
         Camera.StartStanding();
         JumpUp(_jumpHeight);
+        
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/jump", true);
+    }
 
-        EmitSignal(SignalName.StateFinished, "Air", new());
+    public override void Exit()
+    {
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/jump", false);
     }
 
     public override void PhysicsUpdate(double delta)
     {
-
+        EmitSignal(SignalName.StateFinished, "Air", new());
     }
 
     private void JumpUp(float jumpHeight)

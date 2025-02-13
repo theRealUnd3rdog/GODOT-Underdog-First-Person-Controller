@@ -12,11 +12,15 @@ public partial class Idle : MovementState
 
         Camera.StartStanding();
         Timing.RunCoroutine(AlignMeshBeforeAutoAlignment(), "AutoMeshAlignment");
+
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/idle", true);
     }
 
     public override void Exit()
     {
         StopAutoMeshAlignment();
+
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/idle", false);
     }
 
     public override void PhysicsUpdate(double delta)
@@ -32,7 +36,9 @@ public partial class Idle : MovementState
         }
 
         if (Movement.GetRawInputDirection() != Vector2.Zero)
+        {
             EmitSignal(SignalName.StateFinished, "Sprint", new());
+        }
 
 		if (!Movement.IsOnFloor())
 		{

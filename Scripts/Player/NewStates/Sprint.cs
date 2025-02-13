@@ -27,8 +27,8 @@ public partial class Sprint : MovementState
         Camera.StartStanding();
         Movement.SetDirectionChangeTime(_sprintDirChangeTime);
         Movement.SetDirectionControl(_sprintDirectionControl);
-        
-        Movement.AnimationPlayer.Play("sprint");
+
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/moving", true);
     }
 
     public override void Update(double delta)
@@ -41,9 +41,9 @@ public partial class Sprint : MovementState
 
     public override void Exit()
     {
-        Movement.AnimationPlayer.Stop();
+        Movement.AnimationPlayer.Set("parameters/Master/conditions/moving", false);
     }
-
+    
     public override void PhysicsUpdate(double delta)
     {
         // Multiplication being the factor of how much you want to reduce the speed. 1 being full, 0 being nothing
